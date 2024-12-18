@@ -37,8 +37,9 @@ class PizzaCustomizationService(object):
     def __setHandleOrders(self, handle_order: list[PizzaCustomizationHandler]) -> None:
         self.__handlers_order = handle_order
 
+    @staticmethod
     def get_standard_user_configuration_structure(
-        self, user_configuration: Dict[str, list[str] | str]
+        user_configuration: Dict[str, list[str] | str]
     ) -> dict[str : list[str]]:
         return {
             key: value if type(value) is list else [value]

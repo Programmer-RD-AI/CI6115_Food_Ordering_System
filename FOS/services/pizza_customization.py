@@ -1,13 +1,14 @@
-from ..utils.json_handler import JSON
-from ..models.pizza import Pizza
+from typing import Dict
+
 from ..handlers import (
-    PizzaCustomizationHandler,
     CheesesCustomizationHandler,
     CrustsCustomizationHandler,
+    PizzaCustomizationHandler,
     SaucesCustomizationHandler,
     ToppingsCustomizationHandler,
 )
-from typing import Dict
+from ..models.pizza import Pizza
+from ..utils.json_handler import JSON
 
 
 class PizzaCustomizationService(object):
@@ -39,7 +40,7 @@ class PizzaCustomizationService(object):
 
     @staticmethod
     def get_standard_user_configuration_structure(
-        user_configuration: Dict[str, list[str] | str]
+        user_configuration: Dict[str, list[str] | str],
     ) -> dict[str : list[str]]:
         return {
             key: value if type(value) is list else [value]
@@ -62,7 +63,6 @@ class PizzaCustomizationService(object):
 
 
 # TODO: Make sure any one can give a data structure as the following
-
 """
 ```python
 data = {

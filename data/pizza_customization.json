@@ -1,0 +1,45 @@
+{
+  "Crusts": [
+    "Thin Crust",
+    "Thick Crust",
+    "Stuffed Crust",
+    "Gluten-Free Crust",
+    "Cauliflower Crust",
+    "Whole Wheat Crust"
+  ],
+  "Sauces": [
+    "Tomato Sauce",
+    "Barbecue Sauce",
+    "Pesto Sauce",
+    "Alfredo Sauce",
+    "Buffalo Sauce",
+    "Garlic Sauce"
+  ],
+  "Toppings": [
+    "Pepperoni",
+    "Mushrooms",
+    "Olives",
+    "Green Peppers",
+    "Onions",
+    "Sausage",
+    "Bacon",
+    "Spinach",
+    "Pineapple",
+    "Anchovies",
+    "Tomatoes",
+    "Jalapeños",
+    "Chicken",
+    "Fresh Basil"
+  ],
+  "Cheeses": [
+    "Mozzarella",
+    "Cheddar",
+    "Parmesan",
+    "Feta",
+    "Gorgonzola",
+    "Ricotta",
+    "Goat Cheese",
+    "Provolone",
+    "Vegan Cheese"
+  ]
+}

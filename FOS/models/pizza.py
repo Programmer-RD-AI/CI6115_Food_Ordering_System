@@ -3,7 +3,7 @@ class Pizza:
         self.__crusts: list[str] = []
         self.__sauces: list[str] = []
         self.__toppings: list[str] = []
-        self.__cheese: list[str] = []
+        self.__cheeses: list[str] = []
         # TODO: Future Additions
 
     def __str__(self):
@@ -15,44 +15,44 @@ class Pizza:
         """
 
     @property
-    def getCrusts(self) -> list[str]:
+    def get_crusts(self) -> list[str]:
         return self.__crusts
 
-    @getCrusts.setter
-    def setCrusts(self, crusts: list, expand: bool = True):
+    @get_crusts.setter
+    def set_crusts(self, crusts: list, expand: bool = True):
         if expand and self.getCrusts() != []:
             self.__crusts.extend(crusts)
         else:
             self.__crusts = crusts
 
     @property
-    def getSauces(self) -> list[str]:
+    def get_sauces(self) -> list[str]:
         return self.__sauces
 
-    @getSauces.setter
-    def setSauces(self, sauces: list, expand: bool = True):
+    @get_sauces.setter
+    def set_sauces(self, sauces: list, expand: bool = True):
         if expand and self.getSauces() != []:
             self.__sauces.extend(sauces)
         else:
             self.__sauces = sauces
 
     @property
-    def getToppings(self) -> list[str]:
+    def get_toppings(self) -> list[str]:
         return self.__toppings
 
-    @getToppings.setter
-    def setToppings(self, toppings: list, expand: bool = True):
+    @get_toppings.setter
+    def set_toppings(self, toppings: list, expand: bool = True):
         if expand and self.getToppings() != []:
             self.__toppings.extend(toppings)
         else:
             self.__toppings = toppings
 
     @property
-    def getCheeses(self) -> list[str]:
+    def get_cheeses(self) -> list[str]:
         return self.__cheese
 
-    @getCheeses.setter
-    def setCheeses(self, cheese: list, expand: bool = True):
+    @get_cheeses.setter
+    def set_cheeses(self, cheese: list, expand: bool = True):
         if expand and self.getCheeses() != []:
             self.__cheese.extend(cheese)
         else:

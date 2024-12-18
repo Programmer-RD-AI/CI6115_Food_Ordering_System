@@ -10,7 +10,6 @@ class ToppingsCustomizationHandler(PizzaCustomizationHandler):
     ) -> None:
         super().__init__(handler_type, customization, pizza_instance)
 
-    # @override
     def handle_customization(
         self, data: Dict[str, list], remove_duplicates: bool = False
     ) -> Pizza:
@@ -21,10 +20,10 @@ class ToppingsCustomizationHandler(PizzaCustomizationHandler):
             raise ValueError(
                 f"The specified customizations ({', '.join(check_customization_matching)}) are not available. Please choose from the following selection of customizable customization settings: \n{available_customizations}"
             )
-        self.__pizza_instance.setToppings(data[self.handler_type])
         del data[self.handler_type]
         return (
             self.__next_handler.handle_configuration(data)
             if self.__next_handler
-            else self.__pizza_instance
+            else None
         )
+

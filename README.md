@@ -4,7 +4,7 @@
 
 ◦ Allow customers to choose from a variety of crusts, sauces, toppings, and cheese options.
 ◦ Implement a system that enables customers to create custom pizza combinations and name them.
-Implement the Chain of Responsibility pattern for processing order customization requests, allowing different handlers to manage specific customizations.
+[x] Implement the Chain of Responsibility pattern for processing order customization requests, allowing different handlers to manage specific customizations.
 
 ## Ordering Process
 

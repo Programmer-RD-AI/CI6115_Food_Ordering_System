@@ -6,20 +6,14 @@ class PizzaCustomizationHandler(ABC):
         self,
         handler_type: str | None = None,
         customization: JSON = None,
-        pizza_instance: Pizza = None,
     ) -> None:
         self.handler_type = handler_type
-        self.__pizza_instance: Pizza = pizza_instance
         self.customization = customization
         self.__next_handler: Optional[PizzaCustomizationHandler] = None
 
     def set_next(self, handler):
         self.__next_handler = handler
-        self.__next_handler.__set_pizza_instance(self.__pizza_instance)
         return handler
-
-    def __set_pizza_instance(self, pizza_instance: Pizza) -> None:
-        self.__pizza_instance = pizza_instance
 
     def matching_customization_requirements(self, handler_type_data: list) -> bool:
         available_customizations: list = self.customization.get_data()[

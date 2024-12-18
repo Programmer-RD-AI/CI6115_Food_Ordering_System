@@ -9,7 +9,6 @@ class CheesesCustomizationHandler(PizzaCustomizationHandler):
     ) -> None:
         super().__init__(handler_type, customization, pizza_instance)
 
-    # @override
     def handle_customization(
         self, data: Dict[str, list], remove_duplicates: bool = False
     ) -> Pizza:

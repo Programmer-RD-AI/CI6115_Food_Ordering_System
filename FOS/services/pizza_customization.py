@@ -1,13 +1,14 @@
-from ..utils.json_handler import JSON
-from ..models.pizza import Pizza
+from typing import Dict
+
 from ..handlers import (
-    PizzaCustomizationHandler,
     CheesesCustomizationHandler,
     CrustsCustomizationHandler,
+    PizzaCustomizationHandler,
     SaucesCustomizationHandler,
     ToppingsCustomizationHandler,
 )
-from typing import Dict
+from ..models.pizza import Pizza
+from ..utils.json_handler import JSON
 
 
 class PizzaCustomizationService(object):
@@ -61,7 +62,6 @@ class PizzaCustomizationService(object):
 
 
 # TODO: Make sure any one can give a data structure as the following
-
 """
 ```python
 data = {

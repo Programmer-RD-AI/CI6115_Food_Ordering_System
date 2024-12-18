@@ -16,7 +16,6 @@ class PizzaCustomizationService(object):
         self,
         pizza_instance: Pizza = None,
     ):
-
         self.pizza_instance: Pizza = Pizza() if not pizza_instance else pizza_instance
 
     @property

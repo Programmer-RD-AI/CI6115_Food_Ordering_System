@@ -1,4 +1,5 @@
-from . import Pizza, JSON, PizzaCustomizationHandler, Dict
+from . import JSON, Dict, Pizza, PizzaCustomizationHandler
+
 
 class CheesesCustomizationHandler(PizzaCustomizationHandler):
     def __init__(
@@ -26,4 +27,3 @@ class CheesesCustomizationHandler(PizzaCustomizationHandler):
             if self.__next_handler
             else self.__pizza_instance
         )
-

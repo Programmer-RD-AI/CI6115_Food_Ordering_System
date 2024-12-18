@@ -1,4 +1,4 @@
-from . import Pizza, JSON, PizzaCustomizationHandler, Dict
+from . import JSON, Dict, Pizza, PizzaCustomizationHandler
 
 
 class CheesesCustomizationHandler(PizzaCustomizationHandler):

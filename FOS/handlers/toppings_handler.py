@@ -1,4 +1,4 @@
-from . import PizzaCustomizationHandler, Pizza, JSON, Dict
+from . import JSON, Dict, Pizza, PizzaCustomizationHandler
 
 
 class ToppingsCustomizationHandler(PizzaCustomizationHandler):
@@ -26,4 +26,3 @@ class ToppingsCustomizationHandler(PizzaCustomizationHandler):
             if self.__next_handler
             else None
         )
-

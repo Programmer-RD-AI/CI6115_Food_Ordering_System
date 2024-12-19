@@ -1,1 +1,0 @@
-# Payment Strategy Pattern

@@ -1,3 +1,12 @@
+from ..patterns.handlers import (
+    CrustsCustomizationHandler,
+    SaucesCustomizationHandler,
+    ToppingsCustomizationHandler,
+    CheesesCustomizationHandler,
+)
+from ..utils.json_handler import JSON
+
+
 class PizzaService:
     def __init__(
         self,

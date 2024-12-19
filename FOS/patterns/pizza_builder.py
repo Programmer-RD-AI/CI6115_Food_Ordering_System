@@ -7,6 +7,7 @@ class PizzaBuilder:
         pizza: Pizza | None = None,
     ) -> None:
         self.pizza = pizza or Pizza()
+        self.quantity: int = 1
 
     def set_crusts(self, crusts: list[str], **kwargs) -> None:
         self.pizza.set_crusts(crusts, **kwargs)
@@ -24,5 +25,9 @@ class PizzaBuilder:
         self.pizza.set_cheeses(cheeses, **kwargs)
         return self
 
+    def set_quantity(self, quantity: int):
+        self.quantity = quantity
+        return self
+
     def build(self):
-        return self.pizza
+        return [self.pizza * self.quantity]

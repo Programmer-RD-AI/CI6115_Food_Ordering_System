@@ -2,20 +2,20 @@
 
 ## Pizza Customization
 
-◦ Allow customers to choose from a variety of crusts, sauces, toppings, and cheese options.
-◦ Implement a system that enables customers to create custom pizza combinations and name them.
+[x] ◦ Allow customers to choose from a variety of crusts, sauces, toppings, and cheese options.
+[x] ◦ Implement a system that enables customers to create custom pizza combinations and name them.
 [x] Implement the Chain of Responsibility pattern for processing order customization requests, allowing different handlers to manage specific customizations.
 
 ## Ordering Process
 
-◦ Design an intuitive ordering process that guides customers through crust selection, sauces, toppings, quantity, and order review.
-◦ Support both pickup and delivery options. For delivery, integrate with a mapping service to provide accurate delivery estimates.
-Use the Observer pattern to notify users about order changes and provide real time updates on the progress of their orders.
-Apply the Builder pattern to construct complex orders with various customizations, ensuring a flexible and readable order creation process.
+[ ]◦ Design an intuitive ordering process that guides customers through crust selection, sauces, toppings, quantity, and order review.
+[ ]◦ Support both pickup and delivery options. For delivery, integrate with a mapping service to provide accurate delivery estimates.
+[ ] Use the Observer pattern to notify users about order changes and provide real time updates on the progress of their orders.
+[x] Apply the Builder pattern to construct complex orders with various customizations, ensuring a flexible and readable order creation process.
 
 ## User Profiles and Favorites:
 
-◦ Implement user profiles where customers can save their favorite pizza combinations.
+[x] ◦ Implement user profiles where customers can save their favorite pizza combinations.
 ◦ Allow users to reorder their favorite combinations with a single click.
 
 ## Real-Time Order Tracking:

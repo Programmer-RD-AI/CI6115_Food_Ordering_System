@@ -1,0 +1,2 @@
+class AuthenticationRepository(object):
+    pass

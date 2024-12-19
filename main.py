@@ -20,5 +20,6 @@ class Main(object):
         ...
 
     def real_time_tracking(self): ...
+
     def main(self):
         pass

@@ -1,8 +1,8 @@
 from ..patterns.handlers import (
+    CheesesCustomizationHandler,
     CrustsCustomizationHandler,
     SaucesCustomizationHandler,
     ToppingsCustomizationHandler,
-    CheesesCustomizationHandler,
 )
 from ..utils.json_handler import JSON
 

@@ -1,0 +1,45 @@
+{
+  "Crusts": {
+    "Thin Crust": 10.0,
+    "Thick Crust": 10.0,
+    "Stuffed Crust": 10.0,
+    "Gluten-Free Crust": 10.0,
+    "Cauliflower Crust": 10.0,
+    "Whole Wheat Crust": 10.0
+  },
+  "Sauces": {
+    "Tomato Sauce": 10.0,
+    "Barbecue Sauce": 10.0,
+    "Pesto Sauce": 10.0,
+    "Alfredo Sauce": 10.0,
+    "Buffalo Sauce": 10.0,
+    "Garlic Sauce": 10.0
+  },
+  "Toppings": {
+    "Pepperoni": 10.0,
+    "Mushrooms": 10.0,
+    "Olives": 10.0,
+    "Green Peppers": 10.0,
+    "Onions": 10.0,
+    "Sausage": 10.0,
+    "Bacon": 10.0,
+    "Spinach": 10.0,
+    "Pineapple": 10.0,
+    "Anchovies": 10.0,
+    "Tomatoes": 10.0,
+    "Jalapeños": 10.0,
+    "Chicken": 10.0,
+    "Fresh Basil": 10.0
+  },
+  "Cheeses": {
+    "Mozzarella": 10.0,
+    "Cheddar": 10.0,
+    "Parmesan": 10.0,
+    "Feta": 10.0,
+    "Gorgonzola": 10.0,
+    "Ricotta": 10.0,
+    "Goat Cheese": 10.0,
+    "Provolone": 10.0,
+    "Vegan Cheese": 10.0
+  }
+}

@@ -1,0 +1,9 @@
+from typing import Protocol
+
+
+class OrderTrackingState(Protocol):
+    def place_order(self): ...
+
+    def in_preparation_order(self): ...
+
+    def out_for_delivery(self): ...

@@ -1,6 +1,7 @@
+import datetime
 from dataclasses import dataclass, field
 from typing import Any, Dict
-import datetime
+
 
 @dataclass
 class PickUpObserver(OrderObserver):
@@ -11,4 +12,3 @@ class PickUpObserver(OrderObserver):
     def update_observer(self, data: Any) -> None:
         self.observer_logs[datetime.datetime.now()] = data
         print(f"PickUp Observer: {data}")
-

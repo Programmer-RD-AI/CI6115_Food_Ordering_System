@@ -1,4 +1,5 @@
 from typing import Protocol
+
 from .base_state import OrderTrackingState
 
 

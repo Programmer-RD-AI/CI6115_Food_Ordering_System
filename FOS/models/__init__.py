@@ -4,4 +4,4 @@ from .order import Order
 from .pizza import Pizza
 from .price import Price
 from .rating import Rating
-from .user import User 
+from .user import User

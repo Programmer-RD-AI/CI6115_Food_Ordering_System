@@ -1,1 +1,2 @@
-from .pizza_service import *
+from .pizza_service import PizzaService
+from .loyalty_service import LoyaltyService

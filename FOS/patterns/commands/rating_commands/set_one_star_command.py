@@ -1,5 +1,5 @@
-from ..base_command import Command
 from ....models.rating import Rating
+from ..base_command import Command
 
 
 class SetOneStarCommand(Command):

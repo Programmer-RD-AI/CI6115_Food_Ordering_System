@@ -1,5 +1,5 @@
-from ..base_command import Command
 from ....models.feedback import FeedBack
+from ..base_command import Command
 
 
 class ClearFeedBackCommand(Command):

@@ -1,6 +1,7 @@
+import datetime
 from dataclasses import dataclass, field
 from typing import Any, Dict
-import datetime
+
 
 @dataclass
 class DeliveryObserver(OrderObserver):

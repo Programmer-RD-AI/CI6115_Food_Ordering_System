@@ -1,9 +1,8 @@
-from ..utils.json_handler import JSON
 from ..models.user import User
+from ..utils.json_handler import JSON
 
 
 class AuthenticationRepository(object):
-
     def __init__(self, file_name: str = "users.json") -> None:
         self.json_instance = JSON(file_name=file_name)
         self.data = self.json_instance.get_data()

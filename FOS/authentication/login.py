@@ -1,5 +1,5 @@
-from ..repositories.authentication_repository import AuthenticationRepository
 from ..models.user import User
+from ..repositories.authentication_repository import AuthenticationRepository
 
 
 class Login:

@@ -1,6 +1,7 @@
-from typing import Dict
+from typing import Dict, List
 from ..models.pizza import Pizza
 from ..utils.json_handler import JSON
+from .loyalty import Loyalty
 
 
 class User:
@@ -17,8 +18,9 @@ class User:
         self.username = username
         self.password = password
         self.email = email
-        self.user_id = user_id_counter
+        self.user_id = self.user_id_counter
         self.ordered_combinations: Dict[Pizza, int] = {}
+        self.loyalty_collection: List[Loyalty] = []
 
     def add_order(self, pizza: Pizza) -> None:
         if pizza in self.ordered_combinations:
@@ -67,3 +69,11 @@ class User:
     @get_user_id.setter
     def set_user_id(self, new_user_id):
         self.user_id = new_user_id
+
+    @property
+    def get_loyalty(self) -> List[Loyalty]:
+        return self.loyalty_collection
+
+    @get_loyalty.setter
+    def set_loyalty(self, loyalty: Loyalty, update: bool = True):
+        self.loyalty_collection.append(loyalty) if update else [loyalty]

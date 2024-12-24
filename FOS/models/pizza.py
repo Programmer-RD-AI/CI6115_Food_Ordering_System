@@ -7,6 +7,7 @@ class Pizza:
         self.__sauces: list[str] = []
         self.__toppings: list[str] = []
         self.__cheeses: list[str] = []
+        self.__packaging: str = None
         self.name: str = (
             name
             or f"""
@@ -71,3 +72,11 @@ class Pizza:
     @property
     def get_price(self) -> float:
         return self.calculate_price()
+
+    @property
+    def get_packaging(self) -> str:
+        return self.__packaging
+
+    @get_packaging.setter
+    def set_packaging(self, packaging: str):
+        self.__packaging = packaging

@@ -1,5 +1,6 @@
-from ...models.enums.order_state import OrderState
 import order_state
+
+from ...models.enums.order_state import OrderState
 
 
 class PreparingState(order_state.OrderState):

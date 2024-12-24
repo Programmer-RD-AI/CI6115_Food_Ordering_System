@@ -1,4 +1,5 @@
 from typing import Dict, List
+
 from ..models.pizza import Pizza
 from ..utils.json_handler import JSON
 from .loyalty import Loyalty

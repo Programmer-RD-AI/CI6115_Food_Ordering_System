@@ -1,6 +1,7 @@
-from .pizza_decorator import PizzaDecorator
-from ..handlers.base_handler import PizzaCustomizationHandler
 from typing import Union
+
+from ..handlers.base_handler import PizzaCustomizationHandler
+from .pizza_decorator import PizzaDecorator
 
 
 class ExtraCheeseDecorator(PizzaDecorator):

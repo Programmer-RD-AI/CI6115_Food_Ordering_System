@@ -1,5 +1,5 @@
-from . import PizzaCustomizationHandler, Pizza, JSON, Dict
 from ..pizza_builder import PizzaBuilder
+from . import JSON, Dict, Pizza, PizzaCustomizationHandler
 
 
 class ToppingsCustomizationHandler(PizzaCustomizationHandler):

@@ -1,5 +1,6 @@
-from ...models.enums.order_state import OrderState
 import order_state
+
+from ...models.enums.order_state import OrderState
 
 
 class BakingState(order_state.OrderState):

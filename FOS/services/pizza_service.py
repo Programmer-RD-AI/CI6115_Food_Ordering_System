@@ -1,12 +1,12 @@
+from ..models.pizza import Pizza
 from ..patterns.handlers import (
+    CheesesCustomizationHandler,
     CrustsCustomizationHandler,
     SaucesCustomizationHandler,
     ToppingsCustomizationHandler,
-    CheesesCustomizationHandler,
 )
-from ..utils.json_handler import JSON
 from ..patterns.pizza_builder import PizzaBuilder
-from ..models.pizza import Pizza
+from ..utils.json_handler import JSON
 
 
 class PizzaService:

@@ -1,5 +1,5 @@
-from .order_observer import OrderObserver
 from ...models.enums.order_state import OrderState
+from .order_observer import OrderObserver
 
 
 class KitchenDisplay(OrderObserver):

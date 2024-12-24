@@ -1,4 +1,6 @@
-from . import ABC, JSON, Pizza, find_excluded_options, Dict, abstractmethod
+from . import ABC, JSON, find_excluded_options, Dict, abstractmethod
+from typing import Optional
+from ..pizza_builder import PizzaBuilder
 
 
 class PizzaCustomizationHandler(ABC):
@@ -6,9 +8,11 @@ class PizzaCustomizationHandler(ABC):
         self,
         handler_type: str | None = None,
         customization: JSON = None,
+        builder: PizzaBuilder = None,
     ) -> None:
         self.handler_type = handler_type
         self.customization = customization
+        self.builder = builder or PizzaBuilder()
         self.__next_handler: Optional[PizzaCustomizationHandler] = None
 
     def set_next(self, handler):
@@ -28,3 +32,6 @@ class PizzaCustomizationHandler(ABC):
 
     @abstractmethod
     def handle_customization(self, data: Dict[str, list]) -> str: ...
+
+    def get_builder(self):
+        return self.builder

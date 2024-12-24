@@ -1,4 +1,5 @@
 from . import PizzaCustomizationHandler, Pizza, JSON, Dict
+from ..pizza_builder import PizzaBuilder
 
 
 class ToppingsCustomizationHandler(PizzaCustomizationHandler):
@@ -6,9 +7,9 @@ class ToppingsCustomizationHandler(PizzaCustomizationHandler):
         self,
         handler_type: str | None = "Toppings",
         customization: JSON = None,
-        pizza_instance: Pizza = None,
+        builder: PizzaBuilder = None,
     ) -> None:
-        super().__init__(handler_type, customization, pizza_instance)
+        super().__init__(handler_type, customization, builder)
 
     def handle_customization(
         self, data: Dict[str, list], remove_duplicates: bool = False
@@ -20,10 +21,10 @@ class ToppingsCustomizationHandler(PizzaCustomizationHandler):
             raise ValueError(
                 f"The specified customizations ({', '.join(check_customization_matching)}) are not available. Please choose from the following selection of customizable customization settings: \n{available_customizations}"
             )
+        self.builder.set_toppings(data[self.handler_type])
         del data[self.handler_type]
         return (
             self.__next_handler.handle_configuration(data)
             if self.__next_handler
-            else None
+            else self.builder
         )
-

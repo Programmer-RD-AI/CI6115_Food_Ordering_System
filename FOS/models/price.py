@@ -1,5 +1,6 @@
-from ..utils.json_handler import JSON
 from dataclasses import dataclass, field
+
+from ..utils.json_handler import JSON
 
 
 @dataclass

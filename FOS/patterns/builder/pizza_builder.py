@@ -1,54 +1,71 @@
 from ...models.pizza import Pizza
+from typing import Optional, List
 
 
 class PizzaBuilder:
-    def __init__(
-        self,
-        pizza: Pizza | None = None,
-    ) -> None:
-        self.pizza = pizza or Pizza()
+    def __init__(self, pizza: Optional[Pizza] = None) -> None:
+        self.pizza = pizza if pizza is not None else Pizza()
         self.quantity: int = 1
 
-    def get_crusts(self) -> list[str]:
-        return self.pizza.get_crusts()
+    def get_crusts(self) -> List[str]:
+        return self.pizza.crusts()
 
-    def set_crusts(self, crusts: list[str], **kwargs) -> None:
-        self.pizza.set_crusts(crusts, **kwargs)
+    def set_crusts(
+        self,
+        crusts: List[str],
+    ) -> None:
+        self.pizza.crusts = crusts
         return self
 
-    def get_sauces(self) -> list[str]:
-        return self.pizza.get_sauces()
+    def get_sauces(self) -> List[str]:
+        return self.pizza.sauces()
 
-    def set_sauces(self, sauces: list[str], **kwargs) -> None:
-        self.pizza.set_sauces(sauces, **kwargs)
+    def set_sauces(
+        self,
+        sauces: List[str],
+    ) -> None:
+        self.pizza.sauces(
+            sauces,
+        )
         return self
 
-    def get_toppings(self) -> list[str]:
-        return self.pizza.get_toppings()
+    def get_toppings(self) -> List[str]:
+        return self.pizza.toppings()
 
-    def set_toppings(self, toppings: list[str], **kwargs) -> None:
-        self.pizza.set_toppings(toppings, **kwargs)
+    def set_toppings(
+        self,
+        toppings: List[str],
+    ) -> None:
+        self.pizza.toppings(
+            toppings,
+        )
         return self
 
-    def get_cheeses(self) -> list[str]:
-        return self.pizza.get_cheeses()
+    def get_cheeses(self) -> List[str]:
+        return self.pizza.cheeses()
 
-    def set_cheeses(self, cheeses: list[str], **kwargs) -> None:
-        self.pizza.set_cheeses(cheeses, **kwargs)
+    def set_cheeses(
+        self,
+        cheeses: List[str],
+    ) -> None:
+        print(cheeses)
+        self.pizza.cheeses(
+            value=cheeses,
+        )
         return self
 
-    def get_quantity(self) -> list[str]:
+    def get_quantity(self) -> List[str]:
         return self.quantity
 
     def set_quantity(self, quantity: int):
         self.quantity = quantity
         return self
 
-    def get_packaging(self) -> list[str]:
-        return self.pizza.get_packaging()
+    def get_packaging(self) -> List[str]:
+        return self.pizza.packaging()
 
     def set_packaging(self, packaging: str):
-        self.pizza.set_packaging(packaging)
+        self.pizza.packaging(packaging)
         return self
 
     def build(self, list=False):

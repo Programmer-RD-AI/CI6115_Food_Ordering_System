@@ -1,12 +1,21 @@
+from ..models.enums.order_state import OrderState
+import uuid
+from typing import List, Tuple
+from datetime import datetime
+from ..models.pizza import Pizza
+from ..patterns.observers.order_observer import OrderObserver
+from ..models.user import User
+
+
 class Order:
-    def __init__(self, customer_id: str):
+    def __init__(self, user: User):
         self.order_id = str(uuid.uuid4())
-        self.customer_id = customer_id
+        self.user = user
         self.pizzas: List[Pizza] = []
         self.state = OrderState.PLACED
         self.observers: List[OrderObserver] = []
         self.created_at = datetime.now()
-        self.delivery_address: Optional[str] = None
+        self.delivery_coordinates: Tuple[float, float] = None
 
     def add_observer(self, observer: OrderObserver) -> None:
         self.observers.append(observer)

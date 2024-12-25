@@ -1,10 +1,11 @@
-from ..models.enums.order_state import OrderState
 import uuid
-from typing import List, Tuple
 from datetime import datetime
+from typing import List, Tuple
+
+from ..models.enums.order_state import OrderState
 from ..models.pizza import Pizza
-from ..patterns.observers.order_observer import OrderObserver
 from ..models.user import User
+from ..patterns.observers.order_observer import OrderObserver
 
 
 class Order:

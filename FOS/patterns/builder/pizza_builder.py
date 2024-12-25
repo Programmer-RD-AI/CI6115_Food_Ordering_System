@@ -1,4 +1,4 @@
-from ..models.pizza import Pizza
+from ...models.pizza import Pizza
 
 
 class PizzaBuilder:

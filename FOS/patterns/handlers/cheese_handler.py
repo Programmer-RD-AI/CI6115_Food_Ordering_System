@@ -1,5 +1,7 @@
-from . import Pizza, JSON, PizzaCustomizationHandler, Dict
-from ..pizza_builder import PizzaBuilder
+from ...utils.json_handler import JSON
+from ..builder.pizza_builder import PizzaBuilder
+from typing import Dict
+from .base_handler import PizzaCustomizationHandler
 
 
 class CheesesCustomizationHandler(PizzaCustomizationHandler):

@@ -1,5 +1,6 @@
-from .price import Price
 from dataclasses import dataclass, field
+
+from .price import Price
 
 
 @dataclass
@@ -9,15 +10,13 @@ class Pizza:
     __toppings: list[str] = field(default_factory=list)
     __cheeses: list[str] = field(default_factory=list)
     __packaging: str = field(default=None)
-    name: str = (
-        f"""
+    name: str = f"""
     Crusts: {__crusts}\n
     Sauces: {__sauces}\n
     Toppings: {__toppings}\n
     Cheese: {__cheeses}\n
     """
-    )
-    price: Price = field(default_factory = Price())
+    price: Price = field(default_factory=Price())
 
     def __str__(self):
         return self.name

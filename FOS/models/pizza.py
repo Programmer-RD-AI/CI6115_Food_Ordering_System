@@ -1,24 +1,23 @@
 from .price import Price
+from dataclasses import dataclass, field
 
 
+@dataclass
 class Pizza:
-    def __init__(self, name: str):
-        self.__crusts: list[str] = []
-        self.__sauces: list[str] = []
-        self.__toppings: list[str] = []
-        self.__cheeses: list[str] = []
-        self.__packaging: str = None
-        self.name: str = (
-            name
-            or f"""
-        Crusts: {self.__crusts}\n
-        Sauces: {self.__sauces}\n
-        Toppings: {self.__toppings}\n
-        Cheese: {self.__cheese}\n
-        """
-        )
-        self.price: Price = Price()
-        # TODO: Future Additions
+    __crusts: list[str] = field(default_factory=list)
+    __sauces: list[str] = field(default_factory=list)
+    __toppings: list[str] = field(default_factory=list)
+    __cheeses: list[str] = field(default_factory=list)
+    __packaging: str = field(default=None)
+    name: str = (
+        f"""
+    Crusts: {__crusts}\n
+    Sauces: {__sauces}\n
+    Toppings: {__toppings}\n
+    Cheese: {__cheeses}\n
+    """
+    )
+    price: Price = field(default_factory = Price())
 
     def __str__(self):
         return self.name

@@ -1,26 +1,31 @@
 from typing import Dict, List
 from ..models.pizza import Pizza
 from ..utils.json_handler import JSON
+
 from .loyalty import Loyalty
+from dataclasses import dataclass, field
 
 
+from dataclasses import dataclass, field
+from typing import Dict, List
+
+
+@dataclass
 class User:
-    user_id_counter: int = JSON("users.json").get_data()["user_ids"][-1]
+    user_id_counter: int = field(
+        default=JSON(file_name="users.json").get_data()["user_ids"][-1], init=False
+    )
+    user_id: int = field(init=False)
+    username: str = field(default=None)
+    password: str = field(default=None)
+    email: str = field(default=None)
+    ordered_combinations: Dict[Pizza, int] = field(default_factory=dict)
+    loyalty_collection: List[Loyalty] = field(default_factory=list)
 
-    def __init__(
-        self,
-        username: str,
-        password: str,
-        email: str,
-        ordered_combinations: Dict[Pizza, int] = {},
-    ):
+    def __post_init__(self):
+        # Increment counter and set user_id here
         self.user_id_counter += 1
-        self.username = username
-        self.password = password
-        self.email = email
         self.user_id = self.user_id_counter
-        self.ordered_combinations: Dict[Pizza, int] = {}
-        self.loyalty_collection: List[Loyalty] = []
 
     def add_order(self, pizza: Pizza) -> None:
         if pizza in self.ordered_combinations:
@@ -77,3 +82,6 @@ class User:
     @get_loyalty.setter
     def set_loyalty(self, loyalty: Loyalty, update: bool = True):
         self.loyalty_collection.append(loyalty) if update else [loyalty]
+
+    def __str__(self):
+        return f"""{self.user_id} \n {self.username} \n {self.password} \n {self.email} \n {self.ordered_combinations} \n {self.loyalty_collection}"""

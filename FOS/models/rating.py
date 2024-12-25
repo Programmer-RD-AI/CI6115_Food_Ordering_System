@@ -1,6 +1,9 @@
+from dataclasses import dataclass, field
+
+
+@dataclass
 class Rating:
-    def __init__(self):
-        self.rating: int = None
+    rating: int = field(default=None)
 
     def set_rating(self, rating: int):
         if rating < 0 or rating > 5:

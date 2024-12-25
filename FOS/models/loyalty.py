@@ -1,10 +1,9 @@
-from .user import User
+from dataclasses import dataclass, field
 
 
+@dataclass
 class Loyalty:
-    def __init__(self, user: User, amount: int):
-        self.user = user
-        self.amount = amount
+    amount: int = field(default=None)
 
     def loyalty_points(self) -> float:
         return self.amount * 0.05

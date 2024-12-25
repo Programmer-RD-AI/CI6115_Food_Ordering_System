@@ -1,6 +1,9 @@
+from dataclasses import dataclass, field
+
+
+@dataclass
 class FeedBack:
-    def __init__(self):
-        self.feedback: str = None
+    feedback: str = field(default=None)
 
     def set_feedback(self, feedback: str) -> bool:
         if not feedback.strip():

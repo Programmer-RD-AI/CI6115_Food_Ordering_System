@@ -1,11 +1,15 @@
 from ..utils.json_handler import JSON
+from dataclasses import dataclass, field
 
 
+@dataclass
 class Price:
-    def __init__(self, file_name: str = "pricing.json", currency: str = "USD") -> None:
-        self.price: int = 0.0
-        self.currency = currency
-        self.json_instance = JSON(file_name=file_name)
+    file_name: str = field(default="pricing.json")
+    currency: str = field(default="USD")
+    price: float = field(default=0.0)
+
+    def __post_init__(self):
+        self.json_instance = JSON(file_name=self.file_name)
         self.data = self.json_instance.get_data()
 
     def __str__(self):

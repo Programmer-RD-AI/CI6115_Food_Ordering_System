@@ -1,4 +1,5 @@
-class Order:
+from dataclasses import dataclass, field
 
-    def __init__(self):
-        pass
+
+@dataclass
+class Order: ...

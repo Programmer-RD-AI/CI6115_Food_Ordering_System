@@ -1,5 +1,8 @@
-from . import PizzaCustomizationHandler, Dict, JSON, Pizza
-from ..pizza_builder import PizzaBuilder
+from .base_handler import PizzaCustomizationHandler
+from ..builder.pizza_builder import PizzaBuilder
+from typing import Dict
+from ...models.pizza import Pizza
+from ...utils.json_handler import JSON
 
 
 class SaucesCustomizationHandler(PizzaCustomizationHandler):
@@ -24,8 +27,5 @@ class SaucesCustomizationHandler(PizzaCustomizationHandler):
             )
         self.builder.set_sauces(data[self.handler_type])
         del data[self.handler_type]
-        return (
-            self.__next_handler.handle_configuration(data)
-            if self.__next_handler
-            else self.builder
-        )
+        next_handler = self.get_next_handler()
+        return next_handler.handle_configuration(data) if next_handler else self.builder

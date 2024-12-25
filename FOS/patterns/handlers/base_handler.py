@@ -22,6 +22,9 @@ class PizzaCustomizationHandler(ABC):
         self.__next_handler = handler
         return handler
 
+    def get_next_handler(self):
+        return self.__next_handler
+
     def matching_customization_requirements(self, handler_type_data: list) -> bool:
         available_customizations: list = self.customization.get_data()[
             self.handler_type

@@ -1,8 +1,9 @@
+from typing import Dict
+
+from ...models.pizza import Pizza
 from ...utils.json_handler import JSON
 from ..builder.pizza_builder import PizzaBuilder
 from .base_handler import PizzaCustomizationHandler
-from ...models.pizza import Pizza
-from typing import Dict
 
 
 class CrustsCustomizationHandler(PizzaCustomizationHandler):

@@ -1,5 +1,6 @@
-from .price import Price
 from dataclasses import dataclass, field
+
+from .price import Price
 
 
 @dataclass

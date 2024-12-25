@@ -9,15 +9,16 @@ class Pizza:
     __toppings: list[str] = field(default_factory=list)
     __cheeses: list[str] = field(default_factory=list)
     __packaging: str = field(default=None)
-    name: str = (
-        f"""
-    Crusts: {__crusts}\n
-    Sauces: {__sauces}\n
-    Toppings: {__toppings}\n
-    Cheese: {__cheeses}\n
-    """
-    )
-    price: Price = field(default_factory = Price())
+    name: str = field(init=False)
+    price: Price = field(default_factory=Price)
+
+    def __post_init__(self):
+        self.name = f"""
+        Crusts: {self.__crusts}
+        Sauces: {self.__sauces}
+        Toppings: {self.__toppings}
+        Cheese: {self.__cheeses}
+        """
 
     def __str__(self):
         return self.name
@@ -29,53 +30,58 @@ class Pizza:
         self.price.price_calculator_for_toppings(self.__toppings)
         return self.price.get_price()
 
-    def set(self, current_data, new_data, object_data, expand: bool = True):
-        if expand and current_data != []:
-            object_data.extend(new_data)
+    def set(
+        self, current_data: list, new_data: list, object_ref: list, expand: bool = True
+    ) -> float:
+        if expand and current_data:
+            object_ref.extend(new_data)
         else:
-            object_data = new_data
-        return self.calculate_price()
+            object_ref.clear()
+            object_ref.extend(new_data)
+        return self.calculate_price(), object_ref
 
     @property
-    def get_crusts(self) -> list[str]:
+    def crusts(self) -> list[str]:
         return self.__crusts
 
-    @get_crusts.setter
-    def set_crusts(self, crusts: list, expand: bool = True):
-        return self.set(self.get_crusts(), crusts, self.__crusts)
+    @crusts.setter
+    def crusts(self, value: list):
+        price, self.__crusts = self.set(self.__crusts, value, self.__crusts)
 
     @property
-    def get_sauces(self) -> list[str]:
+    def sauces(self) -> list[str]:
         return self.__sauces
 
-    @get_sauces.setter
-    def set_sauces(self, sauces: list, expand: bool = True):
-        return self.set(self.get_sauces(), sauces, self.__sauces)
+    @sauces.setter
+    def sauces(self, value: list):
+        self.set(self.__sauces, value, self.__sauces)
 
     @property
-    def get_toppings(self) -> list[str]:
+    def toppings(self) -> list[str]:
         return self.__toppings
 
-    @get_toppings.setter
-    def set_toppings(self, toppings: list, expand: bool = True):
-        return self.set(self.get_toppings(), toppings, self.__toppings)
+    @toppings.setter
+    def toppings(self, value: list):
+        self.set(self.__toppings, value, self.__toppings)
 
     @property
-    def get_cheeses(self) -> list[str]:
-        return self.__cheese
+    def cheeses(self) -> list[str]:
+        print(self.__cheeses)
+        return self.__cheeses
 
-    @get_cheeses.setter
-    def set_cheeses(self, cheese: list, expand: bool = True):
-        return self.set(self.get_cheeses(), cheese, self.__cheeses)
-
-    @property
-    def get_price(self) -> float:
-        return self.calculate_price()
+    @cheeses.setter
+    def cheeses(self, value: list):
+        print(value)
+        self.set(self.__cheeses, value, self.__cheeses)
 
     @property
-    def get_packaging(self) -> str:
+    def packaging(self) -> str:
         return self.__packaging
 
-    @get_packaging.setter
-    def set_packaging(self, packaging: str):
-        self.__packaging = packaging
+    @packaging.setter
+    def packaging(self, value: str):
+        self.__packaging = value
+
+    @property
+    def price_total(self) -> float:
+        return self.calculate_price()

@@ -13,7 +13,7 @@
 [ ] Use the Observer pattern to notify users about order changes and provide real time updates on the progress of their orders.
 [x] Apply the Builder pattern to construct complex orders with various customizations, ensuring a flexible and readable order creation process.
 
-## User Profiles and Favorites:
+## User Profiles and Favorites
 
 [x] ◦ Implement user profiles where customers can save their favorite pizza combinations.
 [ ] ◦ Allow users to reorder their favorite combinations with a single click.
@@ -40,3 +40,97 @@
 [ ] ◦ Enable customers to provide feedback and ratings for each pizza order.
 [ ] ◦ Use the feedback to improve service and showcase highly-rated combinations to other customers.
 [x] Apply the Command pattern to represent user actions, such as placing an order or providing feedback, as objects that can be queued, undone, or logged.
+
+```
+pizza_ordering_system/
+├── alembic/                    # For database migrations
+│   └── versions/
+├── src/                        # Main source code directory
+│   └── pizza_ordering/         # Main package
+│       ├── api/                # API endpoints (if adding FastAPI later)
+│       │   └── __init__.py
+│       ├── core/               # Core application code
+│       │   ├── __init__.py
+│       │   ├── config.py       # Configuration settings
+│       │   └── constants.py    # System-wide constants
+│       ├── db/                 # Database related code
+│       │   ├── __init__.py
+│       │   └── session.py      # Database session management
+│       ├── models/             # All models (both Pydantic and ORM)
+│       │   ├── __init__.py
+│       │   ├── domain/         # Domain models (ORM models)
+│       │   │   ├── __init__.py
+│       │   │   ├── feedback.py
+│       │   │   ├── loyalty.py
+│       │   │   ├── order.py
+│       │   │   ├── pizza.py
+│       │   │   ├── price.py
+│       │   │   ├── rating.py
+│       │   │   └── user.py
+│       │   └── schemas/        # Pydantic models/schemas
+│       │       ├── __init__.py
+│       │       ├── feedback.py
+│       │       ├── loyalty.py
+│       │       ├── order.py
+│       │       ├── pizza.py
+│       │       ├── price.py
+│       │       ├── rating.py
+│       │       └── user.py
+│       ├── patterns/           # Design patterns
+│       │   ├── __init__.py
+│       │   ├── builders/
+│       │   │   ├── __init__.py
+│       │   │   └── pizza_builder.py
+│       │   ├── commands/
+│       │   │   ├── __init__.py
+│       │   │   ├── base.py
+│       │   │   ├── feedback/
+│       │   │   └── rating/
+│       │   ├── decorators/
+│       │   │   ├── __init__.py
+│       │   │   └── pizza/
+│       │   ├── handlers/
+│       │   │   ├── __init__.py
+│       │   │   └── pizza/
+│       │   ├── observers/
+│       │   │   ├── __init__.py
+│       │   │   └── order/
+│       │   ├── states/
+│       │   │   ├── __init__.py
+│       │   │   └── order/
+│       │   └── strategies/
+│       │       ├── __init__.py
+│       │       └── payment/
+│       ├── repositories/       # Data access layer
+│       │   ├── __init__.py
+│       │   ├── base.py
+│       │   ├── auth.py
+│       │   └── pizza.py
+│       ├── services/          # Business logic layer
+│       │   ├── __init__.py
+│       │   ├── auth.py
+│       │   ├── loyalty.py
+│       │   ├── order.py
+│       │   └── pizza.py
+│       └── utils/             # Utility functions
+│           ├── __init__.py
+│           ├── delivery.py
+│           └── helpers.py
+├── data/                      # JSON data files
+│   ├── menu.json
+│   ├── pizza_customization.json
+│   ├── pricing.json
+│   ├── promotions.json
+│   └── users.json
+├── tests/                     # Test directory
+│   ├── __init__.py
+│   ├── conftest.py
+│   ├── unit/
+│   └── integration/
+├── .env                       # Environment variables
+├── .gitignore
+├── alembic.ini               # Alembic configuration
+├── pyproject.toml            # Project metadata and dependencies
+├── README.md
+└── main.py                   # Application entry point
+```

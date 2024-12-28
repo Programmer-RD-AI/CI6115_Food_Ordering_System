@@ -8,65 +8,46 @@ class PizzaBuilder:
         self.quantity: int = 1
 
     def get_crusts(self) -> List[str]:
-        return self.pizza.crusts()
+        return self.pizza.crusts
 
-    def set_crusts(
-        self,
-        crusts: List[str],
-    ) -> None:
+    def set_crusts(self, crusts: List[str]) -> None:
         self.pizza.crusts = crusts
         return self
 
     def get_sauces(self) -> List[str]:
-        return self.pizza.sauces()
+        return self.pizza.sauces
 
-    def set_sauces(
-        self,
-        sauces: List[str],
-    ) -> None:
-        self.pizza.sauces(
-            sauces,
-        )
+    def set_sauces(self, sauces: List[str]) -> None:
+        self.pizza.sauces = sauces
         return self
 
     def get_toppings(self) -> List[str]:
-        return self.pizza.toppings()
+        return self.pizza.toppings
 
-    def set_toppings(
-        self,
-        toppings: List[str],
-    ) -> None:
-        self.pizza.toppings(
-            toppings,
-        )
+    def set_toppings(self, toppings: List[str]) -> None:
+        self.pizza.toppings = toppings
         return self
 
     def get_cheeses(self) -> List[str]:
-        return self.pizza.cheeses()
+        return self.pizza.cheeses
 
-    def set_cheeses(
-        self,
-        cheeses: List[str],
-    ) -> None:
-        print(cheeses)
-        self.pizza.cheeses(
-            value=cheeses,
-        )
+    def set_cheeses(self, cheeses: List[str]) -> None:
+        self.pizza.cheeses = cheeses
         return self
 
-    def get_quantity(self) -> List[str]:
+    def get_quantity(self) -> int:
         return self.quantity
 
-    def set_quantity(self, quantity: int):
+    def set_quantity(self, quantity: int) -> None:
         self.quantity = quantity
         return self
 
-    def get_packaging(self) -> List[str]:
-        return self.pizza.packaging()
+    def get_packaging(self) -> str:
+        return self.pizza.packaging
 
-    def set_packaging(self, packaging: str):
-        self.pizza.packaging(packaging)
+    def set_packaging(self, packaging: str) -> None:
+        self.pizza.packaging = packaging
         return self
 
     def build(self, list=False):
-        return [self.pizza * self.quantity] if list else self.pizza
+        return self.pizza

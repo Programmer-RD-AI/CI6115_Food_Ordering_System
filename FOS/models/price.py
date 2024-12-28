@@ -31,14 +31,35 @@ class Price:
         return self.__price_calculator(chesses, "Cheeses")
 
     def __price_calculator(
-        self, iterator_values, column_name: str, add_to_price: bool = True
+        self, values, column_name: str, add_to_price: bool = True
     ) -> tuple[float, float]:
-        price = sum(
-            [
-                self.data[column_name][iterator_value]
-                for iterator_value in iterator_values
-            ]
-        )
+        """
+        Calculate price based on values from a specific column.
+
+        Args:
+            values: Single value or list of values (can be nested)
+            column_name: Name of the price column to use
+            add_to_price: Whether to add the calculated price to the running total
+
+        Returns:
+            tuple: (total_price, current_calculation)
+        """
+        # Handle single value case
+        if not isinstance(values, list):
+            values = [values]
+
+        # Flatten list and filter valid values in one pass
+        valid_prices = [
+            self.data[column_name][val]
+            for val in values
+            if isinstance(val, str) and val in self.data[column_name]
+        ]
+
+        # Calculate price
+        calculated_price = sum(valid_prices)
+
+        # Update total price if requested
         if add_to_price:
-            self.price += price
-        return self.price, price
+            self.price += calculated_price
+
+        return self.price, calculated_price

@@ -1,5 +1,4 @@
 from ..base_command import Command
-from ....models.rating import Rating
 
 
 class SetFourStarCommand(Command):

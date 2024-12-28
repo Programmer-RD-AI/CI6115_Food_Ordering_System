@@ -1,4 +1,4 @@
-from ...patterns.pizza_builder import PizzaBuilder
+from ...patterns.builder.pizza_builder import PizzaBuilder
 from .pizza_component import PizzaComponent
 
 

@@ -10,13 +10,18 @@ class SaucesCustomizationHandler(PizzaCustomizationHandler):
         self,
         handler_type: str | None = "Sauces",
         customization: JSON = None,
-        builder: PizzaBuilder = None,
     ) -> None:
-        super().__init__(handler_type, customization, builder)
+        super().__init__(
+            handler_type,
+            customization,
+        )
 
     # @override
     def handle_customization(
-        self, data: Dict[str, list], remove_duplicates: bool = False
+        self,
+        data: Dict[str, list],
+        builder: PizzaBuilder,
+        remove_duplicates: bool = False,
     ) -> Pizza:
         match_bool, check_customization_matching, available_customizations = (
             self.matching_customization_requirements(data[self.handler_type])
@@ -25,7 +30,11 @@ class SaucesCustomizationHandler(PizzaCustomizationHandler):
             raise ValueError(
                 f"The specified customizations ({', '.join(check_customization_matching)}) are not available. Please choose from the following selection of customizable customization settings: \n{available_customizations}"
             )
-        self.builder.set_sauces(data[self.handler_type])
-        del data[self.handler_type]
+        builder = builder.set_sauces(data[self.handler_type])
+        # del data[self.handler_type]
         next_handler = self.get_next_handler()
-        return next_handler.handle_configuration(data) if next_handler else self.builder
+        return (
+            next_handler.handle_customization(data, builder)
+            if next_handler
+            else builder
+        )

@@ -32,14 +32,12 @@ class PizzaService:
         prev_handler = None
         handler_instances = []
         for handler_class in self.handlers:
-            handler = handler_class(
-                customization=self.customization_data, builder=self.builder
-            )
+            handler = handler_class(customization=self.customization_data)
             if prev_handler:
                 handler.set_next(prev_handler)
             prev_handler = handler
             handler_instances.append(handler)
         self.builder = handler_instances[-1].handle_customization(
-            self.user_configuration
+            self.user_configuration, self.builder
         )
         return self.builder

@@ -6,10 +6,6 @@ from .loyalty import Loyalty
 from dataclasses import dataclass, field
 
 
-from dataclasses import dataclass, field
-from typing import Dict, List
-
-
 @dataclass
 class User:
     user_id_counter: int = field(
@@ -29,12 +25,12 @@ class User:
 
     def add_order(self, pizza: Pizza) -> None:
         if pizza in self.ordered_combinations:
-            self.ordered_combinations[str(pizza)] += 1
+            self.ordered_combinations[pizza] += 1
         else:
-            self.ordered_combinations[str(pizza)] = 1
+            self.ordered_combinations[pizza] = 1
 
     def get_order_count(self, pizza: Pizza) -> int:
-        return self.ordered_combinations.get(str(pizza), 0)
+        return self.ordered_combinations.get(pizza, 0)
 
     def get_popular_orders(self):
         return sorted(
@@ -76,8 +72,8 @@ class User:
         self.user_id = new_user_id
 
     @property
-    def get_loyalty(self) -> List[Loyalty]:
-        return self.loyalty_collection
+    def get_loyalty(self) -> float:
+        return sum([loyalty.loyalty_points() for loyalty in self.loyalty_collection])
 
     @get_loyalty.setter
     def set_loyalty(self, loyalty: Loyalty, update: bool = True):

@@ -1,27 +1,25 @@
 from .price import Price
 from dataclasses import dataclass, field
+from typing import List
 
 
 @dataclass
 class Pizza:
-    __crusts: list[str] = field(default_factory=list)
-    __sauces: list[str] = field(default_factory=list)
-    __toppings: list[str] = field(default_factory=list)
-    __cheeses: list[str] = field(default_factory=list)
+    __crusts: List[str] = field(default_factory=list)
+    __sauces: List[str] = field(default_factory=list)
+    __toppings: List[str] = field(default_factory=list)
+    __cheeses: List[str] = field(default_factory=list)
     __packaging: str = field(default=None)
     name: str = field(init=False)
     price: Price = field(default_factory=Price)
 
-    def __post_init__(self):
-        self.name = f"""
+    def __str__(self):
+        return f"""
         Crusts: {self.__crusts}
         Sauces: {self.__sauces}
         Toppings: {self.__toppings}
         Cheese: {self.__cheeses}
         """
-
-    def __str__(self):
-        return self.name
 
     def calculate_price(self) -> float:
         self.price.price_calculator_for_cheeses(self.__cheeses)
@@ -41,38 +39,36 @@ class Pizza:
         return self.calculate_price(), object_ref
 
     @property
-    def crusts(self) -> list[str]:
+    def crusts(self) -> List[str]:
         return self.__crusts
 
     @crusts.setter
-    def crusts(self, value: list):
+    def crusts(self, value: List[str]):
         price, self.__crusts = self.set(self.__crusts, value, self.__crusts)
 
     @property
-    def sauces(self) -> list[str]:
+    def sauces(self) -> List[str]:
         return self.__sauces
 
     @sauces.setter
-    def sauces(self, value: list):
-        self.set(self.__sauces, value, self.__sauces)
+    def sauces(self, value: List[str]):
+        price, self.__sauces = self.set(self.__sauces, value, self.__sauces)
 
     @property
-    def toppings(self) -> list[str]:
+    def toppings(self) -> List[str]:
         return self.__toppings
 
     @toppings.setter
-    def toppings(self, value: list):
-        self.set(self.__toppings, value, self.__toppings)
+    def toppings(self, value: List[str]):
+        price, self.__toppings = self.set(self.__toppings, value, self.__toppings)
 
     @property
-    def cheeses(self) -> list[str]:
-        print(self.__cheeses)
+    def cheeses(self) -> List[str]:
         return self.__cheeses
 
     @cheeses.setter
-    def cheeses(self, value: list):
-        print(value)
-        self.set(self.__cheeses, value, self.__cheeses)
+    def cheeses(self, value: List[str]):
+        price, self.__cheeses = self.set(self.__cheeses, value, self.__cheeses)
 
     @property
     def packaging(self) -> str:

@@ -3,7 +3,6 @@ from ..models.user import User
 
 
 class AuthenticationRepository(object):
-
     def __init__(self, file_name: str = "users.json") -> None:
         self.json_instance = JSON(file_name=file_name)
         self.data = self.json_instance.get_data()
@@ -32,7 +31,5 @@ class AuthenticationRepository(object):
             "usernames", user.get_username, assign=False, append=True
         ).add_data("emails", user.get_email, assign=False, append=True).add_data(
             "passwords", user.get_password, assign=False, append=True
-        ).add_data(
-            "user_ids", user.get_user_id, assign=False, append=True
-        )
+        ).add_data("user_ids", user.get_user_id, assign=False, append=True)
         return True

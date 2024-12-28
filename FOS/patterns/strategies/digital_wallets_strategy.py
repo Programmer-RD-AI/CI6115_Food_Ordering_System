@@ -1,4 +1,4 @@
-from .base_strategy import *
+from .base_strategy import PaymentStrategy
 
 
 class DigitalWalletStrategy(PaymentStrategy):

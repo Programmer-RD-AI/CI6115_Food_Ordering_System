@@ -1,14 +1,9 @@
 from typing import Dict
 
 from ..handlers import (
-    CheesesCustomizationHandler,
-    CrustsCustomizationHandler,
     PizzaCustomizationHandler,
-    SaucesCustomizationHandler,
-    ToppingsCustomizationHandler,
 )
 from ..models.pizza import Pizza
-from ..utils.json_handler import JSON
 
 
 class PizzaCustomizationService(object):
@@ -16,7 +11,6 @@ class PizzaCustomizationService(object):
         self,
         pizza_instance: Pizza = None,
     ):
-
         self.pizza_instance: Pizza = Pizza() if not pizza_instance else pizza_instance
 
     @property

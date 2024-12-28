@@ -11,11 +11,9 @@ class PizzaCustomizationHandler(ABC):
         self,
         handler_type: str | None = None,
         customization: JSON = None,
-        builder: PizzaBuilder = None,
     ) -> None:
         self.handler_type = handler_type
         self.customization = customization
-        self.builder = builder or PizzaBuilder()
         self.__next_handler: Optional[PizzaCustomizationHandler] = None
 
     def set_next(self, handler):
@@ -37,7 +35,9 @@ class PizzaCustomizationHandler(ABC):
         return True, check_customization_matching, available_customizations
 
     @abstractmethod
-    def handle_customization(self, data: Dict[str, list]) -> str: ...
+    def handle_customization(
+        self, data: Dict[str, list], builder: PizzaBuilder
+    ) -> str: ...
 
     def get_builder(self):
         return self.builder

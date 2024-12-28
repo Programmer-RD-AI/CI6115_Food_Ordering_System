@@ -1,6 +1,7 @@
-from .pizza_decorator import PizzaDecorator
-from ..handlers.base_handler import PizzaCustomizationHandler
 from typing import Union
+
+from ..handlers.base_handler import PizzaCustomizationHandler
+from .pizza_decorator import PizzaDecorator
 
 
 class GetPizzaForFreeDecorator(PizzaDecorator):
@@ -14,5 +15,5 @@ class GetPizzaForFreeDecorator(PizzaDecorator):
         super().__init__(builder)
 
     def apply(self):
-        self.__builder .set_(self.packaging)
+        self.__builder.set_(self.packaging)
         return self.get_builder()

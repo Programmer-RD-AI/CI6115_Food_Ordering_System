@@ -1,6 +1,7 @@
+from typing import Dict
+
 from ...utils.json_handler import JSON
 from ..builder.pizza_builder import PizzaBuilder
-from typing import Dict
 from .base_handler import PizzaCustomizationHandler
 
 

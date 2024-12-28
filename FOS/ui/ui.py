@@ -1,33 +1,34 @@
-from ..patterns.observers import CustomerNotifier, KitchenDisplay
+from FOS.patterns.commands.feedback_commands import (
+    ClearFeedBackCommand,
+    SetFeedBackCommand,
+)
+from FOS.patterns.commands.rating_commands import (
+    ClearStarCommand,
+    SetFiveStarCommand,
+    SetFourStarCommand,
+)
+
 from ..authentication import Login, Register
-from ..models.user import User
+from ..models.feedback import FeedBack
 from ..models.pizza import Pizza
-from ..utils.json_handler import JSON
-from ..services.pizza_service import PizzaService
+from ..models.rating import Rating
+from ..models.user import User
+from ..patterns.builder.pizza_builder import PizzaBuilder
+from ..patterns.decorators.extra_cheese_decorator import ExtraCheeseDecorator
+from ..patterns.decorators.get_pizza_for_free_decorator import GetPizzaForFreeDecorator
 from ..patterns.decorators.seasonal_promotions_decorator import (
     SeasonalPromotionsDecorator,
 )
-from ..patterns.decorators.extra_cheese_decorator import ExtraCheeseDecorator
-from ..patterns.decorators.get_pizza_for_free_decorator import GetPizzaForFreeDecorator
-from ..patterns.builder.pizza_builder import PizzaBuilder
+from ..patterns.observers import CustomerNotifier, KitchenDisplay
 from ..patterns.payment import Payment
 from ..patterns.strategies import (
     CreditCardStrategy,
     DigitalWalletStrategy,
     PayPalStrategy,
 )
-from ..models.rating import Rating
-from ..models.feedback import FeedBack
-from FOS.patterns.commands.rating_commands import (
-    SetFiveStarCommand,
-    SetFourStarCommand,
-    ClearStarCommand,
-)
-from FOS.patterns.commands.feedback_commands import (
-    SetFeedBackCommand,
-    ClearFeedBackCommand,
-)
 from ..services.order_service import Order
+from ..services.pizza_service import PizzaService
+from ..utils.json_handler import JSON
 
 
 class UI:

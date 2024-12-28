@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional
+
 from ...models.enums.order_state import OrderState
 
 

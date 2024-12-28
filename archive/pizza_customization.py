@@ -1,8 +1,6 @@
 from typing import Dict
 
-from ..handlers import (
-    PizzaCustomizationHandler,
-)
+from ..handlers import PizzaCustomizationHandler
 from ..models.pizza import Pizza
 
 

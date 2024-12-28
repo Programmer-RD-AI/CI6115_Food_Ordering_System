@@ -1,6 +1,6 @@
+from FOS.models.user import User
 from FOS.patterns.observers.custom_notifier import CustomerNotifier
 from FOS.patterns.observers.kitchen_display import KitchenDisplay
-from FOS.models.user import User
 from FOS.services.pizza_service import PizzaService
 
 # Setup Observers
@@ -8,7 +8,7 @@ custom_notifier = CustomerNotifier()
 kitchen_display = KitchenDisplay()
 
 # Authentication
-## Utilize FOS/authentication
+# Utilize FOS/authentication
 
 user = User(
     "testing",
@@ -18,7 +18,7 @@ user = User(
 print(user)
 
 # Create Custom Pizza
-## kitchen_observer
+# kitchen_observer
 
 pizza_config = {
     "Crusts": [
@@ -37,21 +37,21 @@ pizza_config = {
 pizza_builder = PizzaService(user_configuration=pizza_config).apply_handlers()
 print(pizza_builder.build())
 # Create Already Created Pizza
-## kitchen_observer
+# kitchen_observer
 
 # Decorator Pattern for Additional Features
-## kitchen_observer
-## Seasonal Specials and Promotions
+# kitchen_observer
+# Seasonal Specials and Promotions
 
 # Payment
-## Take into consideration loyalty points and such
+# Take into consideration loyalty points and such
 
 # States
-## Placed
-## Preparing
-## Baking
+# Placed
+# Preparing
+# Baking
 
 # Delivery / Pick Up
-## Implement custom delivery and pick up trackers maybe? so that till the food is handed off to the customer this will repeat on
+# Implement custom delivery and pick up trackers maybe? so that till the food is handed off to the customer this will repeat on
 
 # Rating / Feedback

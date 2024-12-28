@@ -1,6 +1,7 @@
-from .price import Price
 from dataclasses import dataclass, field
 from typing import List
+
+from .price import Price
 
 
 @dataclass

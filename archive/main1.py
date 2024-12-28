@@ -1,13 +1,13 @@
 from FOS.authentication.login import Login
 from FOS.authentication.register import Register
-from FOS.models.user import User
-from FOS.repositories.authentication_repository import AuthenticationRepository
 from FOS.models.pizza import Pizza
+from FOS.models.user import User
 from FOS.patterns.strategies import (
     CreditCardStrategy,
     DigitalWalletsStrategy,
     PayPalStrategy,
 )
+from FOS.repositories.authentication_repository import AuthenticationRepository
 
 
 class Main(object):
@@ -96,6 +96,7 @@ class Main(object):
             self.payment()
 
     def real_time_tracking(self): ...
+
     def main(self):
         self.user: User = self.authentication()
         self.home_page()

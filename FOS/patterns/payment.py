@@ -1,8 +1,9 @@
 # ...existing code...
 from FOS.models.price import Price
-from .strategies.base_strategy import PaymentStrategy
-from ..models.user import User
+
 from ..models.loyalty import Loyalty
+from ..models.user import User
+from .strategies.base_strategy import PaymentStrategy
 
 
 class Payment:
@@ -20,7 +21,9 @@ class Payment:
         """Process the payment, applying any relevant discounts."""
         self.apply_loyalty_points() if apply_loyalty else None
         self.strategy.pay(self.price.price)
-        self.user.set_loyalty(
-            loyalty=Loyalty(self.price.price)
-        ) if not apply_loyalty else None
+        (
+            self.user.set_loyalty(loyalty=Loyalty(self.price.price))
+            if not apply_loyalty
+            else None
+        )
         print(f"Payment processed for amount: {self.price.price}")

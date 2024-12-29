@@ -1,5 +1,6 @@
+from typing import List, Optional
+
 from ...models.pizza import Pizza
-from typing import Optional, List
 
 
 class PizzaBuilder:

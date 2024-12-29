@@ -1,5 +1,6 @@
-from ..models.user import User
 import time
+
+from ..models.user import User
 
 
 class Order:

@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
-from ...models.enums.order_enum import OrderEnum
 from typing import Optional
+
+from ...models.enums.order_enum import OrderEnum
 
 
 class OrderObserver(ABC):

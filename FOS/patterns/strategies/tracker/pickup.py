@@ -1,6 +1,7 @@
-from datetime import datetime
 import random
 import time
+from datetime import datetime
+
 from .order_tracking_strategy import OrderTrackingStrategy
 
 

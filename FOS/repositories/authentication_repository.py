@@ -1,5 +1,5 @@
-from ..utils.json_handler import JSON
 from ..models.user import User
+from ..utils.json_handler import JSON
 
 
 class AuthenticationRepository(object):

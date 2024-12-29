@@ -1,8 +1,9 @@
 # ...existing code...
 from FOS.models.price import Price
-from .user import User
-from .loyalty import Loyalty
+
 from ..patterns.strategies.base_strategy import PaymentStrategy
+from .loyalty import Loyalty
+from .user import User
 
 
 class Payment:

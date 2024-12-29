@@ -1,6 +1,7 @@
 import unittest
-from .user import User
+
 from .loyalty import Loyalty
+from .user import User
 
 
 class TestLoyalty(unittest.TestCase):

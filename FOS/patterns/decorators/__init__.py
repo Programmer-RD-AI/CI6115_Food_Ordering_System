@@ -1,11 +1,13 @@
 from .extra_cheese_decorator import ExtraCheeseDecorator
-from .packaging_decorator import PackagingDecorator
+from .get_pizza_for_free_decorator import GetPizzaForFreeDecorator
 from .pizza_component import PizzaComponent
 from .pizza_decorator import PizzaDecorator
+from .seasonal_promotions_decorator import SeasonalPromotionsDecorator
 
 __all__ = [
     "ExtraCheeseDecorator",
-    "PackagingDecorator",
+    "GetPizzaForFreeDecorator",
     "PizzaComponent",
     "PizzaDecorator",
+    "SeasonalPromotionsDecorator",
 ]

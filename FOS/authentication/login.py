@@ -14,7 +14,9 @@ class Login:
         self.auth_repo = auth_repo
 
     def login(self) -> bool:
-        exists_idx = self.auth_repo.check_if_user_exists()
+        exists_idx = self.auth_repo.check_if_user_exists(
+            self.user.username, self.user.email
+        )
         if not exists_idx:
             return False
         _, username, email, password = self.auth_repo.get_user(exists_idx)

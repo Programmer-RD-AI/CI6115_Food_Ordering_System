@@ -8,7 +8,7 @@
 
 ## Ordering Process
 
-[ ] ◦ Design an intuitive ordering process that guides customers through crust selection, sauces, toppings, quantity, and order review.
+[x] ◦ Design an intuitive ordering process that guides customers through crust selection, sauces, toppings, quantity, and order review.
 [ ] ◦ Support both pickup and delivery options. For delivery, integrate with a mapping service to provide accurate delivery estimates.
 [ ] Use the Observer pattern to notify users about order changes and provide real time updates on the progress of their orders.
 [x] Apply the Builder pattern to construct complex orders with various customizations, ensuring a flexible and readable order creation process.
@@ -32,11 +32,11 @@
 
 ## Seasonal Specials and Promotions:
 
-[ ] ◦ Allow the shop to easily introduce and manage seasonal specials and promotions, such as discounts on certain toppings or pizza sizes during specific times of the year.
-[ ] Use the Decorator pattern to enhance orders with additional features, such as extra toppings or special packaging.
+[x] ◦ Allow the shop to easily introduce and manage seasonal specials and promotions, such as discounts on certain toppings or pizza sizes during specific times of the year.
+[x] Use the Decorator pattern to enhance orders with additional features, such as extra toppings or special packaging.
 
 ## Feedback and Ratings:
 
-[ ] ◦ Enable customers to provide feedback and ratings for each pizza order.
+[x] ◦ Enable customers to provide feedback and ratings for each pizza order.
 [ ] ◦ Use the feedback to improve service and showcase highly-rated combinations to other customers.
 [x] Apply the Command pattern to represent user actions, such as placing an order or providing feedback, as objects that can be queued, undone, or logged.

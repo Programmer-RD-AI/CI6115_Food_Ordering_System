@@ -8,9 +8,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class User:
-    user_id_counter: int = field(
-        default=JSON(file_name="users.json").get_data()["user_ids"][-1], init=False
-    )
+    user_id_counter: int = field(default=0, init=False)
     user_id: int = field(init=False)
     username: str = field(default=None)
     password: str = field(default=None)
@@ -19,18 +17,24 @@ class User:
     loyalty_collection: List[Loyalty] = field(default_factory=list)
 
     def __post_init__(self):
-        # Increment counter and set user_id here
+        try:
+            json_data = JSON(file_name="users.json").get_data()
+            user_ids = json_data.get("user_ids", [])
+            self.user_id_counter = user_ids[-1] if user_ids else 0
+        except (IndexError, KeyError, FileNotFoundError):
+            self.user_id_counter = 0
         self.user_id_counter += 1
         self.user_id = self.user_id_counter
 
     def add_order(self, pizza: Pizza) -> None:
-        if pizza in self.ordered_combinations:
+        pizza = str(pizza)
+        if pizza in self.ordered_combinations.keys():
             self.ordered_combinations[pizza] += 1
         else:
             self.ordered_combinations[pizza] = 1
 
     def get_order_count(self, pizza: Pizza) -> int:
-        return self.ordered_combinations.get(pizza, 0)
+        return self.ordered_combinations.get(str(pizza), 0)
 
     def get_popular_orders(self):
         return sorted(

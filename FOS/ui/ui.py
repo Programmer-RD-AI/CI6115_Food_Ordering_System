@@ -18,29 +18,65 @@ from ..patterns.strategies import (
 )
 from ..models.rating import Rating
 from ..models.feedback import FeedBack
-from FOS.patterns.commands.rating_commands import (
+from ..patterns.commands.rating_commands import (
     SetFiveStarCommand,
     SetFourStarCommand,
-    ClearStarCommand,
+    SetOneStarCommand,
+    SetTwoStarCommand,
+    SetThreeStarCommand,
 )
-from FOS.patterns.commands.feedback_commands import (
+from ..patterns.commands.feedback_commands import (
     SetFeedBackCommand,
     ClearFeedBackCommand,
 )
 from ..services.order_service import Order
+from ..patterns.states import PlacedState, PreparingState, BakingState
+import asyncio
+import random
+from ..patterns.strategies.tracker import (
+    DeliveryTracker,
+    PickUpTracker,
+    OrderTrackingStrategy,
+)
+from ..repositories import AuthenticationRepository
+from colorama import init, Fore, Back, Style
+import os
+
+init()
 
 
 class UI:
     def __init__(self):
         self.custom_notifier = CustomerNotifier()
         self.kitchen_display = KitchenDisplay()
-        self.order = Order()
+        self.order = None
+        self.authentication_repository = AuthenticationRepository()
+        self.BORDER = "═" * 50
+        self.MENU_BORDER = "─" * 50
+        self.LOGO = """
+        🍕 PIZZA ORDERING SYSTEM 🍕
+        """
+
+    def clear_screen(self):
+        os.system("clear" if os.name == "posix" else "cls")
+
+    def print_header(self, text: str):
+        self.clear_screen()
+        print(f"\n{self.BORDER}")
+        print(f"{Fore.YELLOW}{Style.BRIGHT}{text.center(50)}{Style.RESET_ALL}")
+        print(f"{self.BORDER}\n")
 
     def authentication(self) -> User:
-        account_exist = input("Do you have an account? (y/n): ")
+        self.print_header(self.LOGO)
+        print(f"{Fore.CYAN}Welcome! Please authenticate to continue.{Style.RESET_ALL}")
+        account_exist = input(
+            f"\n{Fore.GREEN}Do you have an account? (y/n):{Style.RESET_ALL} "
+        )
+
         if account_exist.lower() == "y":
-            username_or_email = input("Enter your email/username: ")
-            password = input("Enter your password: ")
+            print(f"\n{Fore.BLUE}═══ LOGIN ═══{Style.RESET_ALL}")
+            username_or_email = input(f"{Fore.WHITE}Email/Username:{Style.RESET_ALL} ")
+            password = input(f"{Fore.WHITE}Password:{Style.RESET_ALL} ")
             login = Login(
                 username_or_email,
                 password,
@@ -54,9 +90,9 @@ class UI:
                 print("Invalid credentials")
                 return self.authentication()
         else:
-            username = input("Enter your username: ")
-            password = input("Enter your password: ")
-            email = input("Enter your email: ")
+            username = input(f"{Fore.WHITE}Username:{Style.RESET_ALL} ")
+            password = input(f"{Fore.WHITE}Password:{Style.RESET_ALL} ")
+            email = input(f"{Fore.WHITE}Email:{Style.RESET_ALL} ")
             r = Register(username, password, email, self.authentication_repository)
             response: User = r.register()
             if response:
@@ -65,20 +101,24 @@ class UI:
                 print("Invalid credentials")
                 return self.authentication()
 
-    def home_page(self):
+    def home_page(self, user: User):
         # This would have their most ordered pizza, and such and there is an option to create a pizza
         # Also show promotions and such, they would need to be applied as required
-        choice = input(
-            """
-        1. Order New Pizza
-        2. Order Already Existing Pizza
-        3. Exit
-        """
-        )
+        self.print_header(f"Welcome back, {user.username}!")
+        print(f"{Fore.YELLOW}Your Loyalty Points:{Style.RESET_ALL} {user.get_loyalty}")
+
+        choice = input(f"""
+        {Fore.GREEN}Please select an option:{Style.RESET_ALL}
+
+        1. 🆕 Order New Pizza
+        2. 📋 Order from Previous Orders
+        3. 🚪 Exit
+
+        {Fore.CYAN}Choice:{Style.RESET_ALL} """)
         if choice == "1":
             return self.create_pizza_config()
         elif choice == "2":
-            return self.order_already_existing_pizza()
+            return self.order_already_existing_pizza(user)
         elif choice == "3":
             print("Exiting...")
             exit(0)
@@ -87,9 +127,11 @@ class UI:
         pizza_customization_data = JSON(file_name="pizza_customization.json").get_data()
 
         def display_options(category, options):
-            print(f"\nSelect {category}:")
+            print(f"\n{Fore.YELLOW}【 {category} Options 】{Style.RESET_ALL}")
+            print(self.MENU_BORDER)
             for i, option in enumerate(options, 1):
-                print(f"{i}. {option}")
+                print(f"{Fore.CYAN}{i}.{Style.RESET_ALL} {option}")
+            print(self.MENU_BORDER)
 
             while True:
                 try:
@@ -143,13 +185,18 @@ class UI:
         return pizza_builder
 
     def pay(self, pizza: Pizza, user: User):
-        print(f"\nTotal amount to pay: ${pizza.price.price:.2f}")
+        self.print_header("Payment")
+        print(f"{Fore.GREEN}Total Amount:{Style.RESET_ALL} ${pizza.price.price:.2f}")
+        print(
+            f"{Fore.YELLOW}Available Loyalty Points:{Style.RESET_ALL} {user.get_loyalty}"
+        )
 
-        # Display payment options
-        print("\nPayment Methods:")
-        print("1. Credit Card Payment")
-        print("2. Digital Wallets Payment")
-        print("3. PayPal Payment")
+        print(f"\n{Fore.CYAN}Payment Methods:{Style.RESET_ALL}")
+        print(self.MENU_BORDER)
+        print("1. 💳 Credit Card")
+        print("2. 📱 Digital Wallet")
+        print("3. 🌐 PayPal")
+        print(self.MENU_BORDER)
         # Get payment choice
         payment_strategies = {
             1: CreditCardStrategy(),
@@ -175,47 +222,105 @@ class UI:
         payment.process_payment(use_loyalty)
         return True
 
-    def tracking(self):
-        placed_state = PlacedState()
-        preparing_state = PreparingState()
-        baking_state = BakingState()
-        placed_state.next_state(order)
-        preparing_state.next_state(order)
-        baking_state.next_state(order)
+    def get_tracker(self) -> OrderTrackingStrategy:
+        form_of_order = input("Will you delivery your order? (y/n)").lower()
+        if form_of_order == "y":
+            print("\nEnter your delivery coordinates:")
+            delivery_lat = float(input("Latitude (eg: 7.2906): "))
+            delivery_lon = float(input("Longitude (eg: 80.6337): "))
+            delivery_coords = (delivery_lat, delivery_lon)
 
-        # Delivery / Pick Up
-        delivery_tracker = DeliveryTracker()
-        delivery_tracker.track()
-        pickup_tracker = PickUpTracker()
-        pickup_tracker.track()
+            # Generate nearby store coordinates (0-10km difference)
+            import random
+
+            store_lat = delivery_lat - random.uniform(0, 0.1)  # ~0-10km
+            store_lon = delivery_lon - random.uniform(0, 0.1)  # ~0-10km
+            store_coords = (store_lat, store_lon)
+            tracker = DeliveryTracker(store_coords, delivery_coords)
+        else:
+            tracker = PickUpTracker()
+        return tracker
+
+    async def tracking(self, order: Order, order_tracker: OrderTrackingStrategy):
+        self.print_header("Order Tracking")
+        placed_state = PlacedState()
+        placed_state.next_state(order)
+        await asyncio.sleep(random.randint(1, 10))
+        preparing_state = PreparingState()
+        preparing_state.next_state(order)
+        await asyncio.sleep(random.randint(1, 10))
+        baking_state = BakingState()
+        baking_state.next_state(order)
+        await asyncio.sleep(random.randint(1, 10))
+        print(f"\n{Fore.YELLOW}Delivery Status:{Style.RESET_ALL}")
+        for status in order_tracker.track():
+            print(f"\n{Fore.CYAN}[{status}]{Style.RESET_ALL}")
 
     def feedback(self):
-        # Rating using Command pattern
+        # Initialize rating and feedback
         rating = Rating()
-        five_star = SetFiveStarCommand(rating)
-        four_star = SetFourStarCommand(rating)
-
-        # Execute rating commands
-        five_star.execute()
-        four_star.execute()
-        print("Current average rating:", rating.get_average_rating())
-
-        # Feedback using Command pattern
         feedback = FeedBack()
+
+        ratings = {
+            1: "⭐         Poor",
+            2: "⭐⭐       Fair",
+            3: "⭐⭐⭐      Good",
+            4: "⭐⭐⭐⭐     Excellent",
+            5: "⭐⭐⭐⭐⭐    Outstanding",
+        }
+
+        print(f"{Fore.YELLOW}Please rate your experience:{Style.RESET_ALL}")
+        print(self.MENU_BORDER)
+        for rating_idx, description in ratings.items():
+            print(f"{rating_idx}. {description}")
+        print(self.MENU_BORDER)
+        while True:
+            try:
+                user_rating = int(input("\nEnter your rating (1-5): "))
+                if 1 <= user_rating <= 5:
+                    break
+                print("Please enter a number between 1 and 5.")
+            except ValueError:
+                print("Invalid input. Please enter a number.")
+
+        # Create and execute rating command based on user input
+        rating_commands = {
+            1: SetOneStarCommand(rating),
+            2: SetTwoStarCommand(rating),
+            3: SetThreeStarCommand(rating),
+            4: SetFourStarCommand(rating),
+            5: SetFiveStarCommand(rating),
+        }
+        rating_commands[user_rating].execute()
+
+        # Get user feedback
+        print("\nPlease share your experience with us:")
+        user_feedback = input("> ")
+
+        # Execute feedback command
         set_feedback = SetFeedBackCommand()
         set_feedback.set_feedback(feedback)
+        set_feedback.execute(user_feedback)
 
-        # Execute feedback commands
-        set_feedback.execute("Delicious pizza, fast service!")
-        print("Feedback list:", feedback.get_feedbacks())
+        print("\nThank you for your feedback!")
+        print(f"Your rating: {'⭐' * user_rating}")
+        print(f"Your comment: {user_feedback}")
 
-        # Optional: Clear commands
-        clear_rating = ClearStarCommand(rating)
-        clear_feedback = ClearFeedBackCommand()
-        clear_feedback.set_feedback(feedback)
-
-    def main(self):
-        user = self.authentication()
-        pizza = self.add_on_decorators(self.home_page()).build()
-        user.add_order(pizza)
-        self.pay(pizza, user)
+    async def main(self):
+        
+            user = self.authentication()
+            self.order = Order(user)
+            pizza = self.add_on_decorators(self.home_page(user)).build()
+            user.add_order(pizza)
+            tracker = self.get_tracker()
+            if self.pay(pizza, user):
+                print(f"\n{Fore.GREEN}Payment successful!{Style.RESET_ALL}")
+                tracking = asyncio.create_task(self.tracking(self.order, tracker))
+                await tracking
+                self.feedback()
+            else:
+                print(f"\n{Fore.RED}Payment failed. Please try again.{Style.RESET_ALL}")
+            tracking = asyncio.create_task(self.tracking(self.order, tracker))
+            tracking = await tracking
+            self.feedback()
+        

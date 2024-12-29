@@ -7,14 +7,14 @@ class AuthenticationRepository(object):
         self.json_instance = JSON(file_name=file_name)
         self.data = self.json_instance.get_data()
 
-    def check_if_user_exists(self, username, email) -> bool:
+    def check_if_user_exists(self, username, email):
         for idx, user_id in enumerate(self.data["user_ids"]):
             if (
                 self.data["usernames"][idx] == username
                 or self.data["emails"][idx] == email
             ):
                 return idx
-        return
+        return None
 
     def get_user(self, idx: int) -> bool:
         return (

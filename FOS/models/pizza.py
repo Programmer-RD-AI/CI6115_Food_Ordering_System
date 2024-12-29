@@ -21,6 +21,32 @@ class Pizza:
         Cheese: {self.__cheeses}
         """
 
+    @classmethod
+    def from_string(cls, pizza_str: str) -> "Pizza":
+        """Create Pizza instance from string representation"""
+        pizza = cls()
+        try:
+            # Clean and split the string
+            components = pizza_str.strip().split("\n")
+
+            for component in components:
+                component = component.strip()
+                if component.startswith("Crusts:"):
+                    pizza.__crusts = eval(component.replace("Crusts:", "").strip())
+                elif component.startswith("Sauces:"):
+                    pizza.__sauces = eval(component.replace("Sauces:", "").strip())
+                elif component.startswith("Toppings:"):
+                    pizza.__toppings = eval(component.replace("Toppings:", "").strip())
+                elif component.startswith("Cheese:"):
+                    pizza.__cheeses = eval(component.replace("Cheese:", "").strip())
+
+            # Calculate price based on components
+            pizza.calculate_price()
+            return pizza
+
+        except Exception as e:
+            raise ValueError(f"Invalid pizza string format: {e}")
+
     def calculate_price(self) -> float:
         self.price.price_calculator_for_cheeses(self.__cheeses)
         self.price.price_calculator_for_crusts(self.__crusts)

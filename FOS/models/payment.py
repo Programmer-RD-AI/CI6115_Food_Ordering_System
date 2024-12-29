@@ -20,7 +20,9 @@ class Payment:
         """Process the payment, applying any relevant discounts."""
         self.apply_loyalty_points() if apply_loyalty else None
         self.strategy.pay(self.price.price)
-        self.user.add_loyalty_points(
-            loyalty=Loyalty(self.price.price)
-        ) if not apply_loyalty else None
+        if not apply_loyalty:
+            self.user.add_loyalty_points = Loyalty(self.price.price)
+        else:
+            self.user.add_loyalty_points = None
         print(f"Payment processed for amount: {self.price.price}")
+        return True

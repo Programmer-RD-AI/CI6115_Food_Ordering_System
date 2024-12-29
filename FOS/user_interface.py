@@ -86,8 +86,9 @@ class UI:
                 self.authentication_repository,
             )
             response = login.login()
+            print(f"\n{Fore.BLUE}═══ {response} ═══{Style.RESET_ALL}")
             if response:
-                return True
+                return login.user
             else:
                 print("Invalid credentials")
                 return self.authentication()
@@ -247,7 +248,7 @@ class UI:
 
     def add_on_decorators(self, pizza_builder):
         # Always apply seasonal promotions
-        pizza_builder = SeasonalPromotionsDecorator(pizza_builder).apply()
+        pizza_builder = SeasonalPromotionsDecorator(pizza_builder).apply(Fore, Style)
 
         # Ask for extra cheese
         if input("\nWould you like extra cheese? (y/n): ").lower() == "y":
@@ -265,6 +266,8 @@ class UI:
         return pizza_builder
 
     def pay(self, pizza: Pizza, user: User):
+        if isinstance(pizza, str):
+            pizza = PizzaBuilder(pizza).build()
         self.print_header("Payment")
         print(f"{Fore.GREEN}Total Amount:{Style.RESET_ALL} ${pizza.price.price:.2f}")
         print(

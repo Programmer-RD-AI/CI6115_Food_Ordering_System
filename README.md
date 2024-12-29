@@ -1,42 +1,168 @@
-# CI6115_Food_Ordering_System
+# 🍕 Pizza Ordering System
 
-## Pizza Customization
+A comprehensive pizza ordering system implementing various design patterns to create a flexible, maintainable and feature-rich application.
 
-[x] ◦ Allow customers to choose from a variety of crusts, sauces, toppings, and cheese options.
-[x] ◦ Implement a system that enables customers to create custom pizza combinations and name them.
-[x] Implement the Chain of Responsibility pattern for processing order customization requests, allowing different handlers to manage specific customizations.
+## 🌟 Features
 
-## Ordering Process
+### 🛠 Pizza Customization
 
-[x] ◦ Design an intuitive ordering process that guides customers through crust selection, sauces, toppings, quantity, and order review.
-[x] ◦ Support both pickup and delivery options. For delivery, integrate with a mapping service to provide accurate delivery estimates.
-[x] Use the Observer pattern to notify users about order changes and provide real time updates on the progress of their orders.
-[x] Apply the Builder pattern to construct complex orders with various customizations, ensuring a flexible and readable order creation process.
+- Multiple crust options, sauces, toppings and cheese selections
+- Custom pizza combinations with naming capability
+- Chain of Responsibility pattern for processing customizations
 
-## User Profiles and Favorites
+### 🛍 Ordering Process
 
-[x] ◦ Implement user profiles where customers can save their favorite pizza combinations.
-[ ] ◦ Allow users to reorder their favorite combinations with a single click.
+- Intuitive step-by-step ordering flow
+- Support for delivery and pickup options
+- Real-time delivery estimates using coordinates
+- Builder pattern for complex order creation
 
-## Real-Time Order Tracking:
+### 👤 User Management
 
-[x] ◦ Integrate a real-time order tracking system that updates customers on the status of their pizza orders, including preparation and delivery stages.
-[x] ◦ Provide notifications for significant updates, such as the pizza being prepared or out for delivery.
-[x] Utilize the State pattern to represent the different states of an order (placed, in preparation, out for delivery), making it easy to manage transitions and updates.
+- Profile creation and management
+- Saved favorite combinations
+- Order history tracking
+- One-click reordering of favorites
 
-## Payment and Loyalty Program:
+### 📍 Real-Time Tracking
 
-[x] ◦ Design a payment processing system that supports credit cards, digital wallets, and possibly a loyalty program for repeat customers (No need to integrate an actual payment service. Just mock the procedure for this requirement.).
-[ ] ◦ Implement a loyalty program where customers earn points for each purchase, leading to discounts or free items.
-[x] Apply the Strategy pattern for payment processing, allowing the system to easily integrate new payment methods and promotions.
+- Live order status updates
+- Push notifications for order stages
+- State pattern for order status management
+- Delivery/Pickup tracking with estimated times
 
-## Seasonal Specials and Promotions:
+### 💳 Payment & Loyalty
 
-[x] ◦ Allow the shop to easily introduce and manage seasonal specials and promotions, such as discounts on certain toppings or pizza sizes during specific times of the year.
-[x] Use the Decorator pattern to enhance orders with additional features, such as extra toppings or special packaging.
+- Multiple payment methods:
+  - Credit Card
+  - Digital Wallet
+  - PayPal
+- Loyalty points system
+- Points redemption for discounts
+- Strategy pattern for payment processing
 
-## Feedback and Ratings:
+### 🎉 Promotions
 
-[x] ◦ Enable customers to provide feedback and ratings for each pizza order.
-[ ] ◦ Use the feedback to improve service and showcase highly-rated combinations to other customers.
-[x] Apply the Command pattern to represent user actions, such as placing an order or providing feedback, as objects that can be queued, undone, or logged.
+- Seasonal discounts
+- Holiday specials
+- Extra toppings promotions
+- Decorator pattern for special offers
+
+### ⭐ Ratings & Feedback
+
+- Order rating system
+- Customer feedback collection
+- Popular combinations showcase
+- Command pattern for feedback actions
+
+## 🏗 Design Patterns Used
+
+1. **Chain of Responsibility**
+
+   - Pizza customization handling
+   - Order validation
+
+2. **Builder Pattern**
+
+   - Pizza construction
+   - Order assembly
+
+3. **Observer Pattern**
+
+   - Order status notifications
+   - Delivery updates
+
+4. **State Pattern**
+
+   - Order status management
+   - Delivery tracking
+
+5. **Strategy Pattern**
+
+   - Payment processing
+   - Delivery calculations
+
+6. **Decorator Pattern**
+
+   - Pizza customizations
+   - Special offers
+
+7. **Command Pattern**
+   - Order operations
+   - Feedback handling
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Python 3.8+
+- pip package manager
+
+### Installation
+
+```bash
+# Clone repository
+git clone https://github.com/yourusername/pizza-ordering-system.git
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run application
+python main.py
+```
+
+### Usage Example
+
+```python
+from FOS.user_interface import UI
+import asyncio
+
+ui = UI()
+asyncio.run(ui.main())
+```
+
+## Architeture
+
+```plaintext
+FOS/
+├── models/          # Data models
+├── patterns/        # Design pattern implementations
+├── services/        # Business logic
+├── utils/          # Helper utilities
+├── repositories/   # Data access
+└── ui/            # User interface
+```
+
+## ✨ Features Showcase
+
+### Pizza Creation
+
+```python
+pizza_builder = (
+    PizzaBuilder()
+    .set_crusts(["Thin"])
+    .set_sauces(["Tomato"])
+    .set_toppings(["Pepperoni"])
+    .set_cheeses(["Mozzarella"])
+    .build()
+)
+```
+
+### Payment Processing
+
+```python
+payment = Payment(
+    price=pizza.price,
+    user=current_user,
+    strategy=CreditCardStrategy()
+)
+payment.process_payment(use_loyalty=True)
+```
+
+### Order Tracking
+
+```python
+tracker = DeliveryTracker(store_coords, delivery_coords)
+for status in tracker.track():
+    print(f"Order Status: {status}")
+```

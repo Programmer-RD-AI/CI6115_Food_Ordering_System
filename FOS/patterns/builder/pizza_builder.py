@@ -4,6 +4,8 @@ from typing import Optional, List
 
 class PizzaBuilder:
     def __init__(self, pizza: Optional[Pizza] = None) -> None:
+        if isinstance(pizza, str):
+            pizza = Pizza().from_string(pizza)
         self.pizza = pizza if pizza is not None else Pizza()
         self.quantity: int = 1
 

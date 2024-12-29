@@ -1,4 +1,5 @@
 import unittest
+
 from .custom_notifier import CustomerNotifier
 from .kitchen_display import KitchenDisplay
 

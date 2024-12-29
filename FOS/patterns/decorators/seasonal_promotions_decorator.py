@@ -37,7 +37,7 @@ class SeasonalPromotionsDecorator(PizzaDecorator):
     def apply(self):
         discount_percentage = self.is_holiday_season()
         if discount_percentage > 0:
-            original_price = self.pizza_builder.pizza.price.amount
+            original_price = self.pizza_builder.pizza.price.price
             discount = (discount_percentage / 100) * original_price
             self.pizza_builder.pizza.price.amount = original_price - discount
             print(f"Applied {discount_percentage}% seasonal discount!")

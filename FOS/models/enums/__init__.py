@@ -1,3 +1,3 @@
-from .order_state import OrderState
+from .order_enum import OrderEnum
 
-__all__ = ["OrderState"]
+__all__ = ["OrderEnum"]

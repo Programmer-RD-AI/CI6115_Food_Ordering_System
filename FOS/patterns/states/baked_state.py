@@ -1,7 +1,7 @@
-from ...models.enums.order_state import OrderState
+from ...models.enums.order_enum import OrderEnum
+from .order_state import OrderState
 
 
-class BakingState(OSError):
+class BakingState(OrderState):
     def next_state(self, order) -> None:
-        order.state = OrderState.READY_FOR_DELIVERY
-        order.notify_observers("Pizza is ready for delivery")
+        order.state = OrderEnum.READY_FOR_DELIVERY

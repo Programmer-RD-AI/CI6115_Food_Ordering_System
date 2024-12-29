@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class OrderState(Enum):
+class OrderEnum(Enum):
     PLACED = "placed"
     PREPARING = "preparing"
     BAKING = "baking"

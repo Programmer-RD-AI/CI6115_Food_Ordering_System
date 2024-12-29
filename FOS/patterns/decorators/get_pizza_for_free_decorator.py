@@ -1,18 +1,26 @@
 from .pizza_decorator import PizzaDecorator
 from ..handlers.base_handler import PizzaCustomizationHandler
+from ..builder.pizza_builder import PizzaBuilder
 from typing import Union
 
 
 class GetPizzaForFreeDecorator(PizzaDecorator):
     def __init__(
         self,
-        pizza_handler: Union[PizzaCustomizationHandler, PizzaDecorator],
+        pizza_handler: Union[PizzaBuilder, PizzaCustomizationHandler, PizzaDecorator],
         factor_of_free: int = 1,
     ) -> None:
-        self.factor_of_free = factor_of_free
-        builder = pizza_handler.get_builder()
+        # Handle both PizzaBuilder and decorated objects
+        if isinstance(pizza_handler, PizzaBuilder):
+            builder = pizza_handler
+        else:
+            builder = pizza_handler.get_builder()
+
         super().__init__(builder)
+        self.factor_of_free = factor_of_free
 
     def apply(self):
-        self.__builder .set_(self.packaging)
-        return self.get_builder()
+        # Set pizza as free
+        self._builder.pizza.price.amount = 0
+        self._builder.set_packaging("🎉 FREE PIZZA - Thank you for your loyalty! 🎉")
+        return self._builder

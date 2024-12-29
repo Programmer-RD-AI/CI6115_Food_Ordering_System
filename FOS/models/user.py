@@ -79,8 +79,7 @@ class User:
     def get_loyalty(self) -> float:
         return sum([loyalty.loyalty_points() for loyalty in self.loyalty_collection])
 
-    @get_loyalty.setter
-    def set_loyalty(self, loyalty: Loyalty, update: bool = True):
+    def add_loyalty_points(self, loyalty: Loyalty, update: bool = True):
         self.loyalty_collection.append(loyalty) if update else [loyalty]
 
     def __str__(self):

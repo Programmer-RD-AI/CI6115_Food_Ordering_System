@@ -1,8 +1,7 @@
-from ...models.enums.order_state import OrderState
-from .order_state import OrderState as os
+from ...models.enums.order_enum import OrderEnum
+from .order_state import OrderState
 
 
-class PlacedState(os):
+class PlacedState(OrderState):
     def next_state(self, order) -> None:
-        order.state = OrderState.PREPARING
-        order.notify_observers("Order is being prepared")
+        order.state = OrderEnum.PREPARING

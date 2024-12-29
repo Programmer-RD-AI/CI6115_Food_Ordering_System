@@ -1,45 +1,44 @@
-from ..patterns.observers import CustomerNotifier, KitchenDisplay
-from ..authentication import Login, Register
-from ..models.user import User
-from ..models.pizza import Pizza
-from ..utils.json_handler import JSON
-from ..services.pizza_service import PizzaService
-from ..patterns.decorators.seasonal_promotions_decorator import (
+from .patterns.observers import CustomerNotifier, KitchenDisplay
+from .authentication import Login, Register
+from .models.user import User
+from .models.pizza import Pizza
+from .utils.json_handler import JSON
+from .services.pizza_service import PizzaService
+from .patterns.decorators.seasonal_promotions_decorator import (
     SeasonalPromotionsDecorator,
 )
-from ..patterns.decorators.extra_cheese_decorator import ExtraCheeseDecorator
-from ..patterns.decorators.get_pizza_for_free_decorator import GetPizzaForFreeDecorator
-from ..patterns.builder.pizza_builder import PizzaBuilder
-from ..patterns.payment import Payment
-from ..patterns.strategies import (
+from .patterns.decorators.extra_cheese_decorator import ExtraCheeseDecorator
+from .patterns.decorators.get_pizza_for_free_decorator import GetPizzaForFreeDecorator
+from .patterns.builder.pizza_builder import PizzaBuilder
+from .models.payment import Payment
+from .patterns.strategies import (
     CreditCardStrategy,
     DigitalWalletStrategy,
     PayPalStrategy,
 )
-from ..models.rating import Rating
-from ..models.feedback import FeedBack
-from ..patterns.commands.rating_commands import (
+from .models.rating import Rating
+from .models.feedback import FeedBack
+from .patterns.commands.rating_commands import (
     SetFiveStarCommand,
     SetFourStarCommand,
     SetOneStarCommand,
     SetTwoStarCommand,
     SetThreeStarCommand,
 )
-from ..patterns.commands.feedback_commands import (
+from .patterns.commands.feedback_commands import (
     SetFeedBackCommand,
-    ClearFeedBackCommand,
 )
-from ..services.order_service import Order
-from ..patterns.states import PlacedState, PreparingState, BakingState
+from .services.order_service import Order
+from .patterns.states import PlacedState, PreparingState, BakingState
 import asyncio
 import random
-from ..patterns.strategies.tracker import (
+from .patterns.strategies.tracker import (
     DeliveryTracker,
     PickUpTracker,
     OrderTrackingStrategy,
 )
-from ..repositories import AuthenticationRepository
-from colorama import init, Fore, Back, Style
+from .repositories import AuthenticationRepository
+from colorama import init, Fore, Style
 import os
 
 init()
@@ -131,18 +130,38 @@ class UI:
             print(self.MENU_BORDER)
             for i, option in enumerate(options, 1):
                 print(f"{Fore.CYAN}{i}.{Style.RESET_ALL} {option}")
+            print(f"{Fore.GREEN}0.{Style.RESET_ALL} Done selecting")
             print(self.MENU_BORDER)
 
+            selections = []
             while True:
+                if selections:
+                    print(f"\n{Fore.YELLOW}Current selections:{Style.RESET_ALL}")
+                    for item in selections:
+                        print(f"• {item}")
+
                 try:
                     choice = int(
-                        input(f"Enter number for {category} (1-{len(options)}): ")
+                        input(f"\nSelect {category} (0 to finish, 1-{len(options)}): ")
                     )
+                    if choice == 0:
+                        if not selections:
+                            print(
+                                f"{Fore.RED}Please select at least one option{Style.RESET_ALL}"
+                            )
+                            continue
+                        return selections
                     if 1 <= choice <= len(options):
-                        return [options[choice - 1]]
+                        selections.append(options[choice - 1])
+                        print(
+                            f"{Fore.GREEN}Added {options[choice - 1]}{Style.RESET_ALL}"
+                        )
+                    else:
+                        print(
+                            f"{Fore.RED}Invalid choice. Please try again.{Style.RESET_ALL}"
+                        )
                 except ValueError:
-                    pass
-                print("Invalid choice. Please try again.")
+                    print(f"{Fore.RED}Please enter a valid number{Style.RESET_ALL}")
 
         pizza_builder = PizzaService(
             user_configuration={
@@ -160,10 +179,30 @@ class UI:
 
     def order_already_existing_pizza(self, user: User):
         popular_pizzas = user.get_popular_orders()
-        for idx, popular_pizza in enumerate(popular_pizzas):
-            print(f"{idx}: {popular_pizza}")
-        choice = input("Enter the index of the pizza you want to order: ")
-        return PizzaBuilder(popular_pizzas[int(choice)])
+
+        if not popular_pizzas:
+            print(f"{Fore.YELLOW}No previous orders found!{Style.RESET_ALL}")
+            return self.create_pizza_config()
+
+        print(f"\n{Fore.CYAN}Your Previous Orders:{Style.RESET_ALL}")
+        print(self.MENU_BORDER)
+        for idx, pizza in enumerate(popular_pizzas, 1):
+            print(f"{Fore.GREEN}{idx}.{Style.RESET_ALL} {pizza}")
+        print(self.MENU_BORDER)
+
+        while True:
+            try:
+                choice = int(input(f"\nSelect pizza (1-{len(popular_pizzas)}): "))
+                if 1 <= choice <= len(popular_pizzas):
+                    return PizzaBuilder(popular_pizzas[choice - 1])
+                print(
+                    f"{Fore.RED}Invalid choice. Please enter 1-{len(popular_pizzas)}{Style.RESET_ALL}"
+                )
+            except ValueError:
+                print(f"{Fore.RED}Please enter a valid number{Style.RESET_ALL}")
+            except Exception as e:
+                print(f"{Fore.RED}Error: {str(e)}{Style.RESET_ALL}")
+                return self.create_pizza_config()
 
     def add_on_decorators(self, pizza_builder):
         # Always apply seasonal promotions
@@ -243,18 +282,34 @@ class UI:
 
     async def tracking(self, order: Order, order_tracker: OrderTrackingStrategy):
         self.print_header("Order Tracking")
+
+        # Attach observers
+        order.attach(self.custom_notifier)
+        order.attach(self.kitchen_display)
+
+        # Order placed
         placed_state = PlacedState()
         placed_state.next_state(order)
-        await asyncio.sleep(random.randint(1, 10))
+        order.notify_observers("Order has been placed!")
+        await asyncio.sleep(random.randint(1, 3))
+
+        # Preparing
         preparing_state = PreparingState()
         preparing_state.next_state(order)
-        await asyncio.sleep(random.randint(1, 10))
+        order.notify_observers("Your order is being prepared by our chefs!")
+        await asyncio.sleep(random.randint(2, 4))
+
+        # Baking
         baking_state = BakingState()
         baking_state.next_state(order)
-        await asyncio.sleep(random.randint(1, 10))
+        order.notify_observers("Your pizza is in the oven!")
+        await asyncio.sleep(random.randint(3, 5))
+
         print(f"\n{Fore.YELLOW}Delivery Status:{Style.RESET_ALL}")
         for status in order_tracker.track():
+            order.notify_observers(status)
             print(f"\n{Fore.CYAN}[{status}]{Style.RESET_ALL}")
+            await asyncio.sleep(random.randint(2, 4))
 
     def feedback(self):
         # Initialize rating and feedback
@@ -262,10 +317,10 @@ class UI:
         feedback = FeedBack()
 
         ratings = {
-            1: "⭐         Poor",
-            2: "⭐⭐       Fair",
-            3: "⭐⭐⭐      Good",
-            4: "⭐⭐⭐⭐     Excellent",
+            1: "⭐            Poor",
+            2: "⭐⭐          Fair",
+            3: "⭐⭐⭐        Good",
+            4: "⭐⭐⭐⭐      Excellent",
             5: "⭐⭐⭐⭐⭐    Outstanding",
         }
 
@@ -305,22 +360,19 @@ class UI:
         print("\nThank you for your feedback!")
         print(f"Your rating: {'⭐' * user_rating}")
         print(f"Your comment: {user_feedback}")
+        return user_rating
 
     async def main(self):
-        
+        while True:
             user = self.authentication()
             self.order = Order(user)
             pizza = self.add_on_decorators(self.home_page(user)).build()
             user.add_order(pizza)
             tracker = self.get_tracker()
-            if self.pay(pizza, user):
-                print(f"\n{Fore.GREEN}Payment successful!{Style.RESET_ALL}")
-                tracking = asyncio.create_task(self.tracking(self.order, tracker))
-                await tracking
-                self.feedback()
-            else:
-                print(f"\n{Fore.RED}Payment failed. Please try again.{Style.RESET_ALL}")
+            self.pay(pizza, user)
+            print(f"\n{Fore.GREEN}Payment successful!{Style.RESET_ALL}")
             tracking = asyncio.create_task(self.tracking(self.order, tracker))
             tracking = await tracking
             self.feedback()
-        
+            if input("Order Another Pizza?").lower().lower() == "n":
+                break

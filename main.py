@@ -1,4 +1,4 @@
-from FOS.ui.ui import UI
+from FOS.user_interface import UI
 import asyncio
 
 ui = UI()

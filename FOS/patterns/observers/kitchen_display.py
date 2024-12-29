@@ -1,6 +1,7 @@
-from .order_observer import OrderObserver
-from ...models.enums.order_enum import OrderEnum
 from typing import Optional
+
+from ...models.enums.order_enum import OrderEnum
+from .order_observer import OrderObserver
 
 
 class KitchenDisplay(OrderObserver):

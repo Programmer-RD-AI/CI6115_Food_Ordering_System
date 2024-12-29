@@ -1,8 +1,9 @@
-from datetime import datetime
 import random
 import time
-from .order_tracking_strategy import OrderTrackingStrategy
+from datetime import datetime
+
 from ....utils.delivery_estimator import DeliverEstimator
+from .order_tracking_strategy import OrderTrackingStrategy
 
 
 class DeliveryTracker(OrderTrackingStrategy):

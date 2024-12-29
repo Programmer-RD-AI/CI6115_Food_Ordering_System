@@ -1,46 +1,48 @@
-from ..patterns.observers import CustomerNotifier, KitchenDisplay
+import asyncio
+import os
+import random
+
+from colorama import Back, Fore, Style, init
+
 from ..authentication import Login, Register
-from ..models.user import User
+from ..models.feedback import FeedBack
 from ..models.pizza import Pizza
-from ..utils.json_handler import JSON
-from ..services.pizza_service import PizzaService
-from ..patterns.decorators.seasonal_promotions_decorator import (
-    SeasonalPromotionsDecorator,
+from ..models.rating import Rating
+from ..models.user import User
+from ..patterns.builder.pizza_builder import PizzaBuilder
+from ..patterns.commands.feedback_commands import (
+    ClearFeedBackCommand,
+    SetFeedBackCommand,
+)
+from ..patterns.commands.rating_commands import (
+    SetFiveStarCommand,
+    SetFourStarCommand,
+    SetOneStarCommand,
+    SetThreeStarCommand,
+    SetTwoStarCommand,
 )
 from ..patterns.decorators.extra_cheese_decorator import ExtraCheeseDecorator
 from ..patterns.decorators.get_pizza_for_free_decorator import GetPizzaForFreeDecorator
-from ..patterns.builder.pizza_builder import PizzaBuilder
+from ..patterns.decorators.seasonal_promotions_decorator import (
+    SeasonalPromotionsDecorator,
+)
+from ..patterns.observers import CustomerNotifier, KitchenDisplay
 from ..patterns.payment import Payment
+from ..patterns.states import BakingState, PlacedState, PreparingState
 from ..patterns.strategies import (
     CreditCardStrategy,
     DigitalWalletStrategy,
     PayPalStrategy,
 )
-from ..models.rating import Rating
-from ..models.feedback import FeedBack
-from ..patterns.commands.rating_commands import (
-    SetFiveStarCommand,
-    SetFourStarCommand,
-    SetOneStarCommand,
-    SetTwoStarCommand,
-    SetThreeStarCommand,
-)
-from ..patterns.commands.feedback_commands import (
-    SetFeedBackCommand,
-    ClearFeedBackCommand,
-)
-from ..services.order_service import Order
-from ..patterns.states import PlacedState, PreparingState, BakingState
-import asyncio
-import random
 from ..patterns.strategies.tracker import (
     DeliveryTracker,
-    PickUpTracker,
     OrderTrackingStrategy,
+    PickUpTracker,
 )
 from ..repositories import AuthenticationRepository
-from colorama import init, Fore, Back, Style
-import os
+from ..services.order_service import Order
+from ..services.pizza_service import PizzaService
+from ..utils.json_handler import JSON
 
 init()
 
@@ -107,14 +109,16 @@ class UI:
         self.print_header(f"Welcome back, {user.username}!")
         print(f"{Fore.YELLOW}Your Loyalty Points:{Style.RESET_ALL} {user.get_loyalty}")
 
-        choice = input(f"""
+        choice = input(
+            f"""
         {Fore.GREEN}Please select an option:{Style.RESET_ALL}
 
         1. 🆕 Order New Pizza
         2. 📋 Order from Previous Orders
         3. 🚪 Exit
 
-        {Fore.CYAN}Choice:{Style.RESET_ALL} """)
+        {Fore.CYAN}Choice:{Style.RESET_ALL} """
+        )
         if choice == "1":
             return self.create_pizza_config()
         elif choice == "2":
@@ -307,20 +311,18 @@ class UI:
         print(f"Your comment: {user_feedback}")
 
     async def main(self):
-        
-            user = self.authentication()
-            self.order = Order(user)
-            pizza = self.add_on_decorators(self.home_page(user)).build()
-            user.add_order(pizza)
-            tracker = self.get_tracker()
-            if self.pay(pizza, user):
-                print(f"\n{Fore.GREEN}Payment successful!{Style.RESET_ALL}")
-                tracking = asyncio.create_task(self.tracking(self.order, tracker))
-                await tracking
-                self.feedback()
-            else:
-                print(f"\n{Fore.RED}Payment failed. Please try again.{Style.RESET_ALL}")
+        user = self.authentication()
+        self.order = Order(user)
+        pizza = self.add_on_decorators(self.home_page(user)).build()
+        user.add_order(pizza)
+        tracker = self.get_tracker()
+        if self.pay(pizza, user):
+            print(f"\n{Fore.GREEN}Payment successful!{Style.RESET_ALL}")
             tracking = asyncio.create_task(self.tracking(self.order, tracker))
-            tracking = await tracking
+            await tracking
             self.feedback()
-        
+        else:
+            print(f"\n{Fore.RED}Payment failed. Please try again.{Style.RESET_ALL}")
+        tracking = asyncio.create_task(self.tracking(self.order, tracker))
+        tracking = await tracking
+        self.feedback()

@@ -1,14 +1,30 @@
 from .pizza_decorator import PizzaDecorator
 from ..handlers.base_handler import PizzaCustomizationHandler
+from ..builder.pizza_builder import PizzaBuilder
 from typing import Union
 from datetime import datetime
 
 
 class SeasonalPromotionsDecorator(PizzaDecorator):
-    def __init__(self, pizza_builder: Union[PizzaDecorator, PizzaCustomizationHandler]):
-        self.pizza_builder = pizza_builder
+    def __init__(
+        self, pizza_handler: Union[PizzaBuilder, PizzaCustomizationHandler, str]
+    ) -> None:
+        if pizza_handler is None:
+            raise ValueError("Pizza handler cannot be None")
+
+        # Convert string to PizzaBuilder if needed
+        if isinstance(pizza_handler, str):
+            builder = PizzaBuilder(pizza_handler)
+        # Handle both PizzaBuilder and decorated objects
+        elif isinstance(pizza_handler, PizzaBuilder):
+            builder = pizza_handler
+        elif hasattr(pizza_handler, "get_builder"):
+            builder = pizza_handler.get_builder()
+        else:
+            raise ValueError(f"Invalid pizza handler type: {type(pizza_handler)}")
+
+        super().__init__(builder)
         self.holiday_seasons = {
-            # (start_month, start_day, end_month, end_day): discount_percentage
             (12, 1, 12, 31): 20,  # Christmas/New Year
             (11, 20, 11, 30): 15,  # Black Friday
             (2, 1, 2, 14): 10,  # Valentine's
@@ -37,8 +53,16 @@ class SeasonalPromotionsDecorator(PizzaDecorator):
     def apply(self):
         discount_percentage = self.is_holiday_season()
         if discount_percentage > 0:
-            original_price = self.pizza_builder.pizza.price.price
-            discount = (discount_percentage / 100) * original_price
-            self.pizza_builder.pizza.price.amount = original_price - discount
-            print(f"Applied {discount_percentage}% seasonal discount!")
-        return self.pizza_builder
+            try:
+                builder = self.get_builder()
+                if not hasattr(builder, "pizza"):
+                    builder = PizzaBuilder(builder)
+                original_price = builder.pizza.price.price
+                discount = (discount_percentage / 100) * original_price
+                builder.pizza.price.amount = original_price - discount
+                print(f"Applied {discount_percentage}% seasonal discount!")
+                return builder
+            except Exception as e:
+                print(f"Could not apply seasonal discount: {str(e)}")
+                return self.get_builder()
+        return self.get_builder()

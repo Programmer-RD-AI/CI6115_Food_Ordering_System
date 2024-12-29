@@ -9,8 +9,8 @@
 ## Ordering Process
 
 [x] ◦ Design an intuitive ordering process that guides customers through crust selection, sauces, toppings, quantity, and order review.
-[ ] ◦ Support both pickup and delivery options. For delivery, integrate with a mapping service to provide accurate delivery estimates.
-[ ] Use the Observer pattern to notify users about order changes and provide real time updates on the progress of their orders.
+[x] ◦ Support both pickup and delivery options. For delivery, integrate with a mapping service to provide accurate delivery estimates.
+[x] Use the Observer pattern to notify users about order changes and provide real time updates on the progress of their orders.
 [x] Apply the Builder pattern to construct complex orders with various customizations, ensuring a flexible and readable order creation process.
 
 ## User Profiles and Favorites
@@ -20,8 +20,8 @@
 
 ## Real-Time Order Tracking:
 
-[ ] ◦ Integrate a real-time order tracking system that updates customers on the status of their pizza orders, including preparation and delivery stages.
-[ ] ◦ Provide notifications for significant updates, such as the pizza being prepared or out for delivery.
+[x] ◦ Integrate a real-time order tracking system that updates customers on the status of their pizza orders, including preparation and delivery stages.
+[x] ◦ Provide notifications for significant updates, such as the pizza being prepared or out for delivery.
 [x] Utilize the State pattern to represent the different states of an order (placed, in preparation, out for delivery), making it easy to manage transitions and updates.
 
 ## Payment and Loyalty Program:

@@ -1,29 +1,48 @@
 from typing import Dict
 from ..models.pizza import Pizza
+from ..utils.json_handler import JSON
 
 
 class PizzaRepository(object):
-    def __init__(self, initial_datastore: Dict[str, Pizza] = {}):
-        self.pizza_repository = initial_datastore or {}
+    def __init__(self, initial_datastore: Dict[Pizza, float] = None):
+        self.json_handler = JSON(file_name="pizza_ratings.json")
 
-    def add_pizza(self, name: str, pizza: Pizza) -> None:
-        self.pizza_repository[name] = pizza
+        if initial_datastore is not None:
+            self.pizza_repository = initial_datastore
+        else:
+            # Load existing ratings or start empty
+            try:
+                self.pizza_repository = self.json_handler.get_data()
+            except:
+                self.pizza_repository = {}
+                self.json_handler.set_data({})
 
-    def get_pizza(self, name: str) -> Pizza:
-        return self.pizza_repository.get(name)
+    def add_pizza_rating(self, pizza: Pizza, rating: float):
+        pizza_key = str(pizza)  # Convert Pizza object to string for JSON
+        if pizza_key not in self.pizza_repository:
+            self.pizza_repository[pizza_key] = rating
+        else:
+            self.pizza_repository[pizza_key] = (
+                self.pizza_repository[pizza_key] + rating
+            ) / 2
 
-    def remove_pizza(self, name: str) -> Pizza:
-        return self.pizza_repository.pop(name)
+        # Save updated ratings
+        self.json_handler.set_data(self.pizza_repository)
 
-    def get_all_pizzas(self) -> tuple:
-        return self.pizza_repository.values()
+    def get_most_popular_pizzas(self, top_n: int = 5) -> Dict[str, float]:
+        if not self.pizza_repository:
+            return {}
 
-    def get_pizza_names(self) -> tuple:
-        return self.pizza_repository.keys()
+        sorted_pizzas = dict(
+            sorted(
+                self.pizza_repository.items(), key=lambda item: item[1], reverse=True
+            )
+        )
 
-    def update_pizza(self, name: str, pizza: Pizza) -> Pizza:
-        self.pizza_repository[name] = pizza
-        return pizza
+        if top_n is not None:
+            return dict(list(sorted_pizzas.items())[:top_n])
+        return sorted_pizzas
 
     def clear_pizzas(self) -> None:
         self.pizza_repository.clear()
+        self.json_handler.set_data({})

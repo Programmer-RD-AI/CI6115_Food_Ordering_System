@@ -38,6 +38,7 @@ from .patterns.strategies.tracker import (
     OrderTrackingStrategy,
 )
 from .repositories import AuthenticationRepository
+from .repositories import PizzaRepository
 from colorama import init, Fore, Style
 import os
 
@@ -50,6 +51,8 @@ class UI:
         self.kitchen_display = KitchenDisplay()
         self.order = None
         self.authentication_repository = AuthenticationRepository()
+        self.pizza_repository = PizzaRepository()
+        #
         self.BORDER = "═" * 50
         self.MENU_BORDER = "─" * 50
         self.LOGO = """
@@ -101,26 +104,57 @@ class UI:
                 return self.authentication()
 
     def home_page(self, user: User):
-        # This would have their most ordered pizza, and such and there is an option to create a pizza
-        # Also show promotions and such, they would need to be applied as required
         self.print_header(f"Welcome back, {user.username}!")
+
         print(f"{Fore.YELLOW}Your Loyalty Points:{Style.RESET_ALL} {user.get_loyalty}")
 
         choice = input(f"""
         {Fore.GREEN}Please select an option:{Style.RESET_ALL}
 
         1. 🆕 Order New Pizza
-        2. 📋 Order from Previous Orders
-        3. 🚪 Exit
+        2. 📋 Order from Your Previous Orders
+        3. 🌟 Order from Top Rated Pizzas
+        4. 🚪 Exit
 
         {Fore.CYAN}Choice:{Style.RESET_ALL} """)
+
         if choice == "1":
             return self.create_pizza_config()
         elif choice == "2":
             return self.order_already_existing_pizza(user)
         elif choice == "3":
+            return self.order_top_rated_pizza()
+        elif choice == "4":
             print("Exiting...")
             exit(0)
+
+    def order_top_rated_pizza(self):
+        self.print_header("Top Rated Pizzas")
+
+        popular_pizzas = self.pizza_repository.get_most_popular_pizzas(top_n=5)
+
+        if not popular_pizzas:
+            print(f"{Fore.YELLOW}No rated pizzas found yet!{Style.RESET_ALL}")
+            return self.create_pizza_config()
+
+        print(f"\n{Fore.CYAN}Most Popular Pizzas:{Style.RESET_ALL}")
+        print(self.MENU_BORDER)
+        for idx, (pizza, rating) in enumerate(popular_pizzas.items(), 1):
+            stars = "⭐" * int(rating)
+            print(f"{Fore.GREEN}{idx}.{Style.RESET_ALL} {pizza} {stars} ({rating:.1f})")
+        print(self.MENU_BORDER)
+
+        while True:
+            try:
+                choice = int(input(f"\nSelect pizza (1-{len(popular_pizzas)}): "))
+                if 1 <= choice <= len(popular_pizzas):
+                    selected_pizza = list(popular_pizzas.keys())[choice - 1]
+                    return selected_pizza
+                print(
+                    f"{Fore.RED}Invalid choice. Please enter 1-{len(popular_pizzas)}{Style.RESET_ALL}"
+                )
+            except ValueError:
+                print(f"{Fore.RED}Please enter a valid number{Style.RESET_ALL}")
 
     def create_pizza_config(self):
         pizza_customization_data = JSON(file_name="pizza_customization.json").get_data()
@@ -134,6 +168,8 @@ class UI:
             print(self.MENU_BORDER)
 
             selections = []
+            selected_set = set()  # Track unique selections
+
             while True:
                 if selections:
                     print(f"\n{Fore.YELLOW}Current selections:{Style.RESET_ALL}")
@@ -152,10 +188,15 @@ class UI:
                             continue
                         return selections
                     if 1 <= choice <= len(options):
-                        selections.append(options[choice - 1])
-                        print(
-                            f"{Fore.GREEN}Added {options[choice - 1]}{Style.RESET_ALL}"
-                        )
+                        selected_item = options[choice - 1]
+                        if selected_item in selected_set:
+                            print(
+                                f"{Fore.RED}You've already selected {selected_item}!{Style.RESET_ALL}"
+                            )
+                            continue
+                        selections.append(selected_item)
+                        selected_set.add(selected_item)
+                        print(f"{Fore.GREEN}Added {selected_item}{Style.RESET_ALL}")
                     else:
                         print(
                             f"{Fore.RED}Invalid choice. Please try again.{Style.RESET_ALL}"
@@ -311,7 +352,7 @@ class UI:
             print(f"\n{Fore.CYAN}[{status}]{Style.RESET_ALL}")
             await asyncio.sleep(random.randint(2, 4))
 
-    def feedback(self):
+    def feedback(self, pizza: Pizza):
         # Initialize rating and feedback
         rating = Rating()
         feedback = FeedBack()
@@ -356,15 +397,15 @@ class UI:
         set_feedback = SetFeedBackCommand()
         set_feedback.set_feedback(feedback)
         set_feedback.execute(user_feedback)
-
+        self.pizza_repository.add_pizza_rating(pizza, user_rating)
         print("\nThank you for your feedback!")
         print(f"Your rating: {'⭐' * user_rating}")
         print(f"Your comment: {user_feedback}")
         return user_rating
 
     async def main(self):
+        user = self.authentication()
         while True:
-            user = self.authentication()
             self.order = Order(user)
             pizza = self.add_on_decorators(self.home_page(user)).build()
             user.add_order(pizza)
@@ -373,6 +414,6 @@ class UI:
             print(f"\n{Fore.GREEN}Payment successful!{Style.RESET_ALL}")
             tracking = asyncio.create_task(self.tracking(self.order, tracker))
             tracking = await tracking
-            self.feedback()
+            self.feedback(pizza)
             if input("Order Another Pizza?").lower().lower() == "n":
                 break

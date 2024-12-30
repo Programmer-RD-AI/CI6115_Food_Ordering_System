@@ -265,11 +265,17 @@ class UI:
 
         return pizza_builder
 
-    def pay(self, pizza: Pizza, user: User):
-        if isinstance(pizza, str):
-            pizza = PizzaBuilder(pizza).build()
+    def review_order(self):
+        print(f"\n{Fore.YELLOW}Current Order:{Style.RESET_ALL}")
+        print(self.MENU_BORDER)
+        for idx, pizza in enumerate(self.order.pizzas, 1):
+            print(f"{Fore.GREEN}{idx}.{Style.RESET_ALL} {pizza}")
+        print(self.MENU_BORDER)
+
+    def pay(self, order: Order, user: User):
+        total_price = sum(pizza.price.price for pizza in order.pizzas)
         self.print_header("Payment")
-        print(f"{Fore.GREEN}Total Amount:{Style.RESET_ALL} ${pizza.price.price:.2f}")
+        print(f"{Fore.GREEN}Total Amount:{Style.RESET_ALL} ${total_price:.2f}")
         print(
             f"{Fore.YELLOW}Available Loyalty Points:{Style.RESET_ALL} {user.get_loyalty}"
         )
@@ -297,7 +303,7 @@ class UI:
                 print("Please enter a number between 1-3.")
 
         # Initialize payment with selected strategy
-        payment = Payment(pizza.price, user, payment_strategies[choice])
+        payment = Payment(total_price, user, payment_strategies[choice])
 
         use_loyalty = (
             input("Do you want to use your loyalty points? (y/n)").lower() == "y"
@@ -410,13 +416,19 @@ class UI:
         user = self.authentication()
         while True:
             self.order = Order(user)
-            pizza = self.add_on_decorators(self.home_page(user)).build()
-            user.add_order(pizza)
+            while True:
+                pizza = self.add_on_decorators(self.home_page(user)).build()
+                self.order.add_pizza(pizza)
+                user.add_order(pizza)
+                self.review_order()
+                if input("Add another pizza to this order? (y/n): ").lower() == "n":
+                    break
             tracker = self.get_tracker()
-            self.pay(pizza, user)
+            self.pay(self.order, user)
             print(f"\n{Fore.GREEN}Payment successful!{Style.RESET_ALL}")
             tracking = asyncio.create_task(self.tracking(self.order, tracker))
             tracking = await tracking
-            self.feedback(pizza)
-            if input("Order Another Pizza?").lower().lower() == "n":
+            for pizza in self.order.pizzas:
+                self.feedback(pizza)
+            if input("Place another order? (y/n): ").lower() == "n":
                 break

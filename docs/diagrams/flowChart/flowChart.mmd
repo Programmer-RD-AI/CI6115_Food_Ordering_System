@@ -1,0 +1,168 @@
+---
+config:
+  theme: default
+  themeVariables:
+    primaryColor: "#1f77b4" 
+    primaryTextColor: "#2d3436"
+    primaryBorderColor: "#2d3436"
+    lineColor: "#2d3436"
+    secondaryColor: "#ffffff"
+    tertiaryColor: "#f1f1f1"
+  flowchart:
+    diagramPadding: 30
+    nodeSpacing: 60
+    rankSpacing: 60
+    defaultRenderer: elk
+    curve: basis
+---
+flowchart TB
+    %% Entry Point
+    Start[/"Start Application"/] --> Auth[("Authentication Module")]
+    
+    subgraph Authentication ["Authentication System"]
+        direction TB
+        Auth --> LoginChoice{"Login or Register?"}
+        
+        LoginChoice -->|"Login"| Login["Login Process"]
+        LoginChoice -->|"Register"| Register["Registration Process"]
+        
+        subgraph Login Process
+            Login --> ValidateUser["Validate Credentials"]
+            ValidateUser --> CheckDB{"Check Repository"}
+            CheckDB -->|"Valid"| Success["Authentication Success"]
+            CheckDB -->|"Invalid"| Retry["Retry/Reset"]
+            Retry --> Login
+        end
+
+        subgraph Registration Process
+            Register --> CreateUser["Create New User"]
+            CreateUser --> ValidateFields{"Validate Fields"}
+            ValidateFields -->|"Valid"| SaveUser["Save User"]
+            ValidateFields -->|"Invalid"| FixFields["Fix Fields"]
+            FixFields --> Register
+            SaveUser --> UserRepo[("User Repository")]
+        end
+    end
+
+    Success --> HomePage["Home Page"]
+    
+    %% Main Application Flow
+    HomePage --> OrderChoice{"Order Selection"}
+    
+    subgraph Order Flow ["Order Processing System"]
+        OrderChoice -->|"New Order"| CustomPizza["Create Custom Pizza"]
+        OrderChoice -->|"Previous Orders"| History["Order History"]
+        OrderChoice -->|"Popular Items"| TopRated["Top Rated Pizzas"]
+
+        subgraph Pizza Creation ["Pizza Creation System"]
+            direction TB
+            CustomPizza --> PizzaBuilder["Initialize Pizza Builder"]
+            
+            subgraph Chain ["Chain of Responsibility Pattern"]
+                direction TB
+                PizzaBuilder -->|"First Handler"| CrustHandler["Crust Handler"]
+                CrustHandler -->|"Next"| SauceHandler["Sauce Handler"]
+                SauceHandler -->|"Next"| ToppingHandler["Topping Handler"]
+                ToppingHandler -->|"Next"| CheeseHandler["Cheese Handler"]
+                CheeseHandler -->|"Final"| ValidateConfig["Validate Configuration"]
+            end
+
+            History --> LoadHistory["Load User History"]
+            LoadHistory --> ExistingPizza["Select Previous Pizza"]
+            
+            TopRated --> LoadPopular["Load Popular Items"]
+            LoadPopular --> RatedPizza["Select Popular Pizza"]
+        end
+
+        subgraph Decorator System ["Pizza Decorator System"]
+            direction TB
+            ValidateConfig --> BaseDecorator["Base Pizza"]
+            ExistingPizza --> BaseDecorator
+            RatedPizza --> BaseDecorator
+            
+            BaseDecorator -->|"Required"| SeasonalPromo["Seasonal Promotions Decorator"]
+            SeasonalPromo -->|"Optional"| ExtraCheese["Extra Cheese Decorator"]
+            ExtraCheese -->|"Optional"| FreePizza["Free Pizza Decorator"]
+            FreePizza --> FinalPizza["Final Pizza Configuration"]
+        end
+
+        FinalPizza --> DeliveryChoice{"Delivery Method"}
+        
+        subgraph Delivery System ["Delivery Management"]
+            DeliveryChoice -->|"Delivery"| Location["Enter Location"]
+            DeliveryChoice -->|"Pickup"| Store["Select Store"]
+            Location --> InitiateDelivery["Initialize Delivery"]
+            Store --> InitiatePickup["Initialize Pickup"]
+        end
+
+        subgraph Payment System ["Payment Processing"]
+            InitiateDelivery --> Payment{"Payment Method"}
+            InitiatePickup --> Payment
+            Payment -->|"Credit Card"| CC["Credit Card Processing"]
+            Payment -->|"Digital Wallet"| DW["Digital Wallet Processing"]
+            Payment -->|"PayPal"| PP["PayPal Processing"]
+            
+            CC & DW & PP --> LoyaltyCheck{"Use Loyalty Points?"}
+            LoyaltyCheck -->|"Yes"| ApplyLoyalty["Apply Loyalty Discount"]
+            LoyaltyCheck -->|"No"| ProcessPayment["Process Full Payment"]
+            ApplyLoyalty --> ProcessPayment
+        end
+
+        subgraph Order Tracking ["Order Tracking System"]
+            ProcessPayment --> InitTracking["Initialize Tracking"]
+            
+            subgraph State Pattern ["Order State Management"]
+                direction TB
+                InitTracking --> Placed["Order Placed State"]
+                Placed --> Preparing["Preparing State"]
+                Preparing --> Baking["Baking State"]
+                Baking --> Delivery["Delivery State"]
+            end
+
+            subgraph Observer Pattern ["Order Notifications"]
+                direction TB
+                InitTracking --> Notify["Notify Observers"]
+                Notify --> Customer["Customer Notification"]
+                Notify --> Kitchen["Kitchen Display"]
+                Notify --> System["System Updates"]
+            end
+        end
+
+        subgraph Feedback System ["Customer Feedback"]
+            Delivery --> OrderComplete["Order Complete"]
+            OrderComplete --> Rating["Rate Order"]
+            
+            subgraph Command Pattern ["Rating Commands"]
+                direction TB
+                Rating --> Stars["Star Rating"]
+                Stars --> OneStar["1 Star Command"]
+                Stars --> TwoStar["2 Star Command"]
+                Stars --> ThreeStar["3 Star Command"]
+                Stars --> FourStar["4 Star Command"]
+                Stars --> FiveStar["5 Star Command"]
+            end
+            
+            Stars --> Feedback["Process Feedback"]
+            Feedback --> UpdateStats["Update Statistics"]
+        end
+    end
+
+    UpdateStats --> OrderMore{"Order More?"}
+    OrderMore -->|"Yes"| HomePage
+    OrderMore -->|"No"| End[/"End Application"/]
+
+    %% Styling
+    classDef primary fill:#1f77b4,stroke:#333,stroke-width:2px,color:white
+    classDef success fill:#2ecc71,stroke:#333,stroke-width:2px,color:white
+    classDef warning fill:#f1c40f,stroke:#333,stroke-width:2px,color:black
+    classDef danger fill:#e74c3c,stroke:#333,stroke-width:2px,color:white
+    classDef info fill:#3498db,stroke:#333,stroke-width:2px,color:white
+    classDef system fill:#9b59b6,stroke:#333,stroke-width:2px,color:white
+    
+    class Start,End primary
+    class Auth,HomePage,OrderChoice info
+    class PizzaBuilder,Chain,BaseDecorator success
+    class Payment,ProcessPayment warning
+    class Rating,Feedback,Stars info
+    class State,Observer system
+    class OrderComplete success

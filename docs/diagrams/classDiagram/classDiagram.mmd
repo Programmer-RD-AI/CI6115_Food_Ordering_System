@@ -1,0 +1,236 @@
+---
+config:
+  theme: default
+  themeVariables:
+    primaryColor: "#1f77b4"
+    primaryTextColor: "#2d3436"
+    primaryBorderColor: "#2d3436" 
+    lineColor: "#2d3436"
+    secondaryColor: "#ffffff"
+  flowchart:
+    diagramPadding: 20
+    nodeSpacing: 50
+    rankSpacing: 50
+    defaultRenderer: elk
+    curve: ortho
+---
+classDiagram
+    class K2434232_Pizza {
+        -List[str] crusts
+        -List[str] sauces
+        -List[str] toppings
+        -List[str] cheeses
+        -str packaging
+        -Price price
+        +str __str__()
+        +float calculate_price()
+        +static Pizza from_string(str)
+        +float set(List, List, List, bool)
+        +List[str] crusts
+        +List[str] sauces
+        +List[str] toppings
+        +List[str] cheeses
+        +str packaging
+        +float price_total
+    }
+
+    class K2434232_User {
+        -int user_id_counter
+        -int user_id
+        -str username
+        -str password
+        -str email
+        -Dict[Pizza, int] ordered_combinations
+        -List[Loyalty] loyalty_collection
+        +void add_order(Pizza)
+        +int get_order_count(Pizza)
+        +List[Pizza] get_popular_orders()
+        +str get_username()
+        +str get_password()
+        +str get_email()
+        +int get_loyalty()
+    }
+
+    class K2434232_Order {
+        -User user
+        -OrderState state
+        -List[OrderObserver] observers
+        -str order_id
+        -Pizza pizza
+        -Payment payment
+        +void attach(OrderObserver)
+        +void detach(OrderObserver)
+        +void notify_observers(str)
+        +void process_order()
+        +void set_state(OrderState)
+    }
+
+    class K2434232_Payment {
+        -Price amount
+        -User user
+        -PaymentStrategy strategy
+        -bool use_loyalty
+        +bool process_payment(bool)
+        +void set_strategy(PaymentStrategy)
+        +float calculate_discount()
+    }
+
+    class K2434232_PizzaBuilder {
+        -Pizza pizza
+        -int quantity
+        +PizzaBuilder set_crusts(List[str])
+        +PizzaBuilder set_sauces(List[str])
+        +PizzaBuilder set_toppings(List[str])
+        +PizzaBuilder set_cheeses(List[str])
+        +PizzaBuilder set_packaging(str)
+        +List[str] get_crusts()
+        +List[str] get_sauces()
+        +List[str] get_toppings()
+        +List[str] get_cheeses()
+        +str get_packaging()
+        +Pizza build()
+    }
+
+    class K2434232_OrderState {
+        <<abstract>>
+        +void next_state(Order)*
+        +str get_state_name()*
+    }
+
+    class K2434232_PlacedState {
+        +void next_state(Order)
+        +str get_state_name()
+    }
+
+    class K2434232_PreparingState {
+        +void next_state(Order)
+        +str get_state_name()
+    }
+
+    class K2434232_BakingState {
+        +void next_state(Order)
+        +str get_state_name()
+    }
+
+    class K2434232_DeliveredState {
+        +void next_state(Order)
+        +str get_state_name()
+    }
+
+    class K2434232_OrderObserver {
+        <<interface>>
+        +void update(str, str, OrderState)*
+    }
+
+    class K2434232_CustomerNotifier {
+        +void update(str, str, OrderState)
+        -void send_notification(str)
+    }
+
+    class K2434232_KitchenDisplay {
+        +void update(str, str, OrderState)
+        -void update_display(str)
+    }
+
+    class K2434232_PaymentStrategy {
+        <<interface>>
+        +bool process(Price)*
+        +void validate_payment()*
+    }
+
+    class K2434232_CreditCardStrategy {
+        -str card_number
+        -str cvv
+        +bool process(Price)
+        +void validate_payment()
+    }
+
+    class K2434232_PayPalStrategy {
+        -str email
+        +bool process(Price)
+        +void validate_payment()
+    }
+
+    class K2434232_DigitalWalletStrategy {
+        +bool process(Price)
+        +void validate_payment()
+    }
+
+    class K2434232_PizzaDecorator {
+        #PizzaBuilder builder
+        +Pizza apply()*
+    }
+
+    %% Extra Cheese Decorator
+    class K2434232_ExtraCheeseDecorator {
+        -int factor_of_extra_cheese
+        +ExtraCheeseDecorator(PizzaBuilder, int)
+        +PizzaBuilder apply()
+    }
+
+    %% Seasonal Promotions Decorator
+    class K2434232_SeasonalPromotionsDecorator {
+        -Dict holiday_seasons
+        +SeasonalPromotionsDecorator(Union[PizzaBuilder, PizzaCustomizationHandler, str, Pizza])
+        +bool is_holiday_season()
+        +PizzaBuilder apply(Fore, Style)
+    }
+    
+    %% Get Pizza For Free Decorator
+    class K2434232_GetPizzaForFreeDecorator {
+        -int factor_of_free
+        +GetPizzaForFreeDecorator(Union[PizzaBuilder, PizzaCustomizationHandler, PizzaDecorator], int)
+        +PizzaBuilder apply()
+    }
+
+    class K2434232_SeasonalToppingsDecorator {
+        +Pizza apply()
+    }
+
+    class K2434232_Price {
+        -float base_amount
+        -float tax
+        -float discount
+        +float calculate_total()
+        +void apply_discount(float)
+        +float get_price()
+        +void price_calculator_for_cheeses(List[str])
+        +void price_calculator_for_crusts(List[str])
+        +void price_calculator_for_sauces(List[str])
+        +void price_calculator_for_toppings(List[str])
+    }
+
+    %% Core Composition Relationships with Orthogonal Lines
+    Order o-- "1" Pizza
+    Order o-- "1" User
+    Order o-- "1" OrderState
+    Order o-- "1" Payment  
+    Order o-- "*" OrderObserver
+    Payment o-- "1" PaymentStrategy
+    PizzaBuilder o-- "1" PizzaDecorator
+    PizzaBuilder o-- "1" Pizza
+    Pizza o-- "1" Price
+
+    %% State Pattern Inheritance (90-degree connections)
+    OrderState <|-- PlacedState : extends
+    OrderState <|-- PreparingState : extends
+    OrderState <|-- BakingState : extends 
+    OrderState <|-- DeliveredState : extends
+
+    %% Observer Pattern Implementation (Orthogonal)
+    OrderObserver <|.. CustomerNotifier : implements
+    OrderObserver <|.. KitchenDisplay : implements
+
+    %% Strategy Pattern Implementation
+    PaymentStrategy <|.. CreditCardStrategy : implements
+    PaymentStrategy <|.. PayPalStrategy : implements
+    PaymentStrategy <|.. DigitalWalletStrategy : implements
+
+    %% Decorator Pattern Extensions
+    PizzaDecorator <|-- ExtraCheeseDecorator : extends
+    PizzaDecorator <|-- SeasonalPromotionsDecorator : extends
+    PizzaDecorator <|-- GetPizzaForFreeDecorator : extends
+    PizzaDecorator <|-- SeasonalToppingsDecorator : extends
+
+    %% Layout Direction
+    direction TB

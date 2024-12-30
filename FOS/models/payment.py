@@ -13,16 +13,16 @@ class Payment:
 
     def apply_loyalty_points(self):
         """Apply loyalty points discount to the price."""
-        self.price.price -= self.user.get_loyalty
-        return self.price.price
+        self.price -= self.user.get_loyalty
+        return self.price
 
     def process_payment(self, apply_loyalty: bool = False):
         """Process the payment, applying any relevant discounts."""
         self.apply_loyalty_points() if apply_loyalty else None
-        self.strategy.pay(self.price.price)
+        self.strategy.pay(self.price)
         if not apply_loyalty:
-            self.user.add_loyalty_points = Loyalty(self.price.price)
+            self.user.add_loyalty_points = Loyalty(self.price)
         else:
             self.user.add_loyalty_points = None
-        print(f"Payment processed for amount: {self.price.price}")
+        print(f"Payment processed for amount: {self.price}")
         return True

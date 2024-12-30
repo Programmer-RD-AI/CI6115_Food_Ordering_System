@@ -2,10 +2,10 @@
 config:
   theme: default
   themeVariables:
-    primaryColor: "#1f77b4" 
-    primaryTextColor: "#2d3436"
-    primaryBorderColor: "#2d3436"
-    lineColor: "#2d3436"
+    primaryColor: "#000000"
+    primaryTextColor: "#000000"
+    primaryBorderColor: "#000000" 
+    lineColor: "#000000"
     secondaryColor: "#ffffff"
     tertiaryColor: "#f1f1f1"
   flowchart:
@@ -46,7 +46,7 @@ flowchart TB
 
     Success --> HomePage["Home Page"]
     
-    %% Main Application Flow
+    %% Main Order Flow
     HomePage --> OrderChoice{"Order Selection"}
     
     subgraph Order Flow ["Order Processing System"]
@@ -86,7 +86,10 @@ flowchart TB
             FreePizza --> FinalPizza["Final Pizza Configuration"]
         end
 
-        FinalPizza --> DeliveryChoice{"Delivery Method"}
+        FinalPizza --> ReviewOrder["Review Order"]
+        ReviewOrder --> AddMore{"Add Another Pizza?"}
+        AddMore -->|"Yes"| OrderChoice
+        AddMore -->|"No"| DeliveryChoice{"Delivery Method"}
         
         subgraph Delivery System ["Delivery Management"]
             DeliveryChoice -->|"Delivery"| Location["Enter Location"]
@@ -96,8 +99,8 @@ flowchart TB
         end
 
         subgraph Payment System ["Payment Processing"]
-            InitiateDelivery --> Payment{"Payment Method"}
-            InitiatePickup --> Payment
+            InitiateDelivery & InitiatePickup --> CalculateTotal["Calculate Total Price"]
+            CalculateTotal --> Payment{"Payment Method"}
             Payment -->|"Credit Card"| CC["Credit Card Processing"]
             Payment -->|"Digital Wallet"| DW["Digital Wallet Processing"]
             Payment -->|"PayPal"| PP["PayPal Processing"]
@@ -110,16 +113,17 @@ flowchart TB
 
         subgraph Order Tracking ["Order Tracking System"]
             ProcessPayment --> InitTracking["Initialize Tracking"]
+            InitTracking --> TrackAll["Track All Pizzas"]
             
-            subgraph State Pattern ["Order State Management"]
+            subgraph StatePattern ["Order State Management"]
                 direction TB
-                InitTracking --> Placed["Order Placed State"]
+                TrackAll --> Placed["Order Placed State"]
                 Placed --> Preparing["Preparing State"]
                 Preparing --> Baking["Baking State"]
                 Baking --> Delivery["Delivery State"]
             end
 
-            subgraph Observer Pattern ["Order Notifications"]
+            subgraph ObserverPattern ["Order Notifications"]
                 direction TB
                 InitTracking --> Notify["Notify Observers"]
                 Notify --> Customer["Customer Notification"]
@@ -132,7 +136,7 @@ flowchart TB
             Delivery --> OrderComplete["Order Complete"]
             OrderComplete --> Rating["Rate Order"]
             
-            subgraph Command Pattern ["Rating Commands"]
+            subgraph CommandPattern ["Rating Commands"]
                 direction TB
                 Rating --> Stars["Star Rating"]
                 Stars --> OneStar["1 Star Command"]
@@ -147,22 +151,16 @@ flowchart TB
         end
     end
 
-    UpdateStats --> OrderMore{"Order More?"}
+    UpdateStats --> OrderMore{"Place New Order?"}
     OrderMore -->|"Yes"| HomePage
     OrderMore -->|"No"| End[/"End Application"/]
 
     %% Styling
-    classDef primary fill:#1f77b4,stroke:#333,stroke-width:2px,color:white
-    classDef success fill:#2ecc71,stroke:#333,stroke-width:2px,color:white
-    classDef warning fill:#f1c40f,stroke:#333,stroke-width:2px,color:black
-    classDef danger fill:#e74c3c,stroke:#333,stroke-width:2px,color:white
-    classDef info fill:#3498db,stroke:#333,stroke-width:2px,color:white
-    classDef system fill:#9b59b6,stroke:#333,stroke-width:2px,color:white
+    classDef primary fill:#000000,stroke:#000000,stroke-width:2px,color:white
+    classDef secondary fill:#ffffff,stroke:#000000,stroke-width:2px,color:black
+    classDef highlight fill:#f1f1f1,stroke:#000000,stroke-width:2px,color:black
     
     class Start,End primary
-    class Auth,HomePage,OrderChoice info
-    class PizzaBuilder,Chain,BaseDecorator success
-    class Payment,ProcessPayment warning
-    class Rating,Feedback,Stars info
-    class State,Observer system
-    class OrderComplete success
+    class Auth,HomePage,OrderChoice,Payment,DeliveryChoice highlight
+    class PizzaBuilder,Chain,BaseDecorator,OrderComplete secondary
+    class StatePattern,ObserverPattern,CommandPattern highlight

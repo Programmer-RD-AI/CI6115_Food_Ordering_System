@@ -3,24 +3,40 @@
         1,
         2,
         3,
-        4
+        4,
+        5,
+        6,
+        7,
+        8
     ],
     "usernames": [
         "test",
         "tefghd",
         "gsrhere",
-        "gdfgherher"
+        "gdfgherher",
+        "testing",
+        "test",
+        "test",
+        "ranugad"
     ],
     "passwords": [
         "test",
         "gdhdfh",
         "grgedrgedr",
-        "hethdthfgh"
+        "hethdthfgh",
+        "testing",
+        "test@email.com",
+        "test",
+        "test123"
     ],
     "emails": [
         "test",
         "defer",
         "2terg",
-        "fghfghf"
+        "fghfghf",
+        "testing",
+        "pass123",
+        "test",
+        "ranuga@gmail.com"
     ]
 }

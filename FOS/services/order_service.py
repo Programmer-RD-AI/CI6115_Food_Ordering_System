@@ -1,6 +1,7 @@
-from ..models.user import User
-from ..models.pizza import Pizza
 import time
+
+from ..models.pizza import Pizza
+from ..models.user import User
 
 
 class Order:

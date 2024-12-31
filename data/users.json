@@ -7,7 +7,8 @@
         5,
         6,
         7,
-        8
+        8,
+        9
     ],
     "usernames": [
         "test",
@@ -17,7 +18,8 @@
         "testing",
         "test",
         "test",
-        "ranugad"
+        "ranugad",
+        "test"
     ],
     "passwords": [
         "test",
@@ -27,7 +29,8 @@
         "testing",
         "test@email.com",
         "test",
-        "test123"
+        "test123",
+        "test"
     ],
     "emails": [
         "test",
@@ -37,6 +40,7 @@
         "testing",
         "pass123",
         "test",
-        "ranuga@gmail.com"
+        "ranuga@gmail.com",
+        "test"
     ]
 }

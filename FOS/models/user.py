@@ -15,6 +15,7 @@ class User:
     email: str = field(default=None)
     ordered_combinations: Dict[Pizza, int] = field(default_factory=dict)
     loyalty_collection: List[Loyalty] = field(default_factory=list)
+    favorite_pizzas: List[Pizza] = field(default_factory=list)
 
     def __post_init__(self):
         try:
@@ -25,6 +26,13 @@ class User:
             self.user_id_counter = 0
         self.user_id_counter += 1
         self.user_id = self.user_id_counter
+
+    def add_favorite_pizza(self, pizza: Pizza) -> None:
+        if pizza not in self.favorite_pizzas:
+            self.favorite_pizzas.append(pizza)
+
+    def get_favorite_pizzas(self) -> List[Pizza]:
+        return self.favorite_pizzas
 
     def add_order(self, pizza: Pizza) -> None:
         pizza = str(pizza)

@@ -53,6 +53,7 @@ flowchart TB
         OrderChoice -->|"New Order"| CustomPizza["Create Custom Pizza"]
         OrderChoice -->|"Previous Orders"| History["Order History"]
         OrderChoice -->|"Popular Items"| TopRated["Top Rated Pizzas"]
+        OrderChoice -->|"Favorites"| Favorites["Favorite Pizzas"]
 
         subgraph Pizza Creation ["Pizza Creation System"]
             direction TB
@@ -72,6 +73,9 @@ flowchart TB
             
             TopRated --> LoadPopular["Load Popular Items"]
             LoadPopular --> RatedPizza["Select Popular Pizza"]
+
+            Favorites --> LoadFavorites["Load Favorite Pizzas"]
+            LoadFavorites --> FavoritePizza["Select Favorite Pizza"]
         end
 
         subgraph Decorator System ["Pizza Decorator System"]
@@ -79,6 +83,7 @@ flowchart TB
             ValidateConfig --> BaseDecorator["Base Pizza"]
             ExistingPizza --> BaseDecorator
             RatedPizza --> BaseDecorator
+            FavoritePizza --> BaseDecorator
             
             BaseDecorator -->|"Required"| SeasonalPromo["Seasonal Promotions Decorator"]
             SeasonalPromo -->|"Optional"| ExtraCheese["Extra Cheese Decorator"]

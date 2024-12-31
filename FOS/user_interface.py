@@ -62,6 +62,34 @@ class UI:
     def clear_screen(self):
         os.system("clear" if os.name == "posix" else "cls")
 
+    def save_favorite_pizza(self, user: User, pizza: Pizza):
+        user.add_favorite_pizza(pizza)
+        print(f"{Fore.GREEN}Pizza saved to favorites!{Style.RESET_ALL}")
+
+    def reorder_favorite_pizza(self, user: User):
+        favorite_pizzas = user.get_favorite_pizzas()
+
+        if not favorite_pizzas:
+            print(f"{Fore.YELLOW}No favorite pizzas found!{Style.RESET_ALL}")
+            return None
+
+        print(f"\n{Fore.CYAN}Your Favorite Pizzas:{Style.RESET_ALL}")
+        print(self.MENU_BORDER)
+        for idx, pizza in enumerate(favorite_pizzas, 1):
+            print(f"{Fore.GREEN}{idx}.{Style.RESET_ALL} {pizza}")
+        print(self.MENU_BORDER)
+
+        while True:
+            try:
+                choice = int(input(f"\nSelect pizza (1-{len(favorite_pizzas)}): "))
+                if 1 <= choice <= len(favorite_pizzas):
+                    return PizzaBuilder(favorite_pizzas[choice - 1])
+                print(
+                    f"{Fore.RED}Invalid choice. Please enter 1-{len(favorite_pizzas)}{Style.RESET_ALL}"
+                )
+            except ValueError:
+                print(f"{Fore.RED}Please enter a valid number{Style.RESET_ALL}")
+
     def print_header(self, text: str):
         self.clear_screen()
         print(f"\n{self.BORDER}")
@@ -115,7 +143,8 @@ class UI:
         1. 🆕 Order New Pizza
         2. 📋 Order from Your Previous Orders
         3. 🌟 Order from Top Rated Pizzas
-        4. 🚪 Exit
+        4. ❤️ Reorder Favorite Pizza
+        5. 🚪 Exit
 
         {Fore.CYAN}Choice:{Style.RESET_ALL} """)
 
@@ -126,6 +155,8 @@ class UI:
         elif choice == "3":
             return self.order_top_rated_pizza()
         elif choice == "4":
+            return self.reorder_favorite_pizza(user)
+        elif choice == "5":
             print("Exiting...")
             exit(0)
 

@@ -42,6 +42,7 @@ classDiagram
         -str email
         -Dict[Pizza, int] ordered_combinations
         -List[Loyalty] loyalty_collection
+        -List[Pizza] favorite_pizzas
         +void add_order(Pizza)
         +int get_order_count(Pizza)
         +List[Pizza] get_popular_orders()
@@ -49,6 +50,8 @@ classDiagram
         +str get_password()
         +str get_email()
         +int get_loyalty()
+        +void add_favorite_pizza(Pizza)
+        +List[Pizza] get_favorite_pizzas()
     }
 
     class K2434232_Order {
@@ -220,6 +223,8 @@ classDiagram
         +async void tracking(Order, OrderTrackingStrategy)
         +float feedback(Pizza)
         +async void main()
+        +void save_favorite_pizza(User, Pizza)
+        +PizzaBuilder reorder_favorite_pizza(User)
     }
     
     %% Core Composition Relationships with Orthogonal Lines
